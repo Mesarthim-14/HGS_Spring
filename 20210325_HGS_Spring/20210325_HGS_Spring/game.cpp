@@ -81,6 +81,7 @@ HRESULT CGame::Init()
 	D3DXCreateFont(pD3DDevice, 18, 0, 0, 0, FALSE, SHIFTJIS_CHARSET,
 		OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH, "Terminal", &m_pFont);
 
+
 	return S_OK;
 }
 

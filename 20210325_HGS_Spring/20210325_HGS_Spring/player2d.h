@@ -11,11 +11,12 @@
 // インクルード
 //=============================================================================
 #include "character2d.h"
+#include "player.h"
 
 //=============================================================================
 // プレイヤー2Dクラス
 //=============================================================================
-class CPlayer2d : public CCharacter2d
+class CPlayer2d : public CCharacter2d, public CPlayer
 {
 public:
 	CPlayer2d(PRIORITY Priority = PRIORITY_CHARACTER);			// コンストラクタ

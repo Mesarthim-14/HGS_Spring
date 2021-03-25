@@ -37,6 +37,7 @@ CPlayer2d * CPlayer2d::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size)
 	// ‰Šú‰»ˆ—
 	CPlayer2d *pPlayer = new CPlayer2d;
 	CTexture *pTexture = GET_TEXTURE_PTR;
+
 	// !nullcheck
 	if (pPlayer != nullptr)
 	{

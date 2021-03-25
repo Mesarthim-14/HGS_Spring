@@ -24,9 +24,9 @@ public:
 	virtual ~CCharacter() {}											// デストラクタ
 
 	virtual HRESULT Init(void) = 0;			// 初期化処理
-	virtual void Uninit() = 0;											// 終了処理
-	virtual void Update() = 0;											// 更新処理
-	virtual void Draw() = 0;											// 描画処理
+	virtual void Uninit(void) = 0;											// 終了処理
+	virtual void Update(void) = 0;											// 更新処理
+	virtual void Draw(void) = 0;											// 描画処理
 
 	// 純粋仮想関数
 	virtual void UpdateState(void) = 0;								// キャラクター状態

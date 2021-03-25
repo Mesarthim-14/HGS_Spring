@@ -12,11 +12,12 @@
 //=============================================================================
 #include "character3d.h"
 #include "modelanime.h"
+#include "player.h"
 
 //=============================================================================
 // プレイヤークラス
 //=============================================================================
-class CPlayer3d : public CCharacter3d
+class CPlayer3d : public CCharacter3d, public CPlayer
 {
 public:
 	//=============================================================================
@@ -40,7 +41,7 @@ public:
 	};
 
 	CPlayer3d(PRIORITY Priority = PRIORITY_CHARACTER);			// コンストラクタ
-	~CPlayer3d();													// デストラクタ
+	~CPlayer3d();												// デストラクタ
 
 	static CPlayer3d*Create(D3DXVECTOR3 pos, D3DXVECTOR3 size);	// クリエイト
 

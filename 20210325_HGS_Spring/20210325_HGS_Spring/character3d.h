@@ -36,9 +36,9 @@ public:
 	virtual ~CCharacter3d();											// デストラクタ
 
 	virtual HRESULT Init(void);			// 初期化処理
-	virtual void Uninit();											// 終了処理
-	virtual void Update();											// 更新処理
-	virtual void Draw();											// 描画処理
+	virtual void Uninit(void);											// 終了処理
+	virtual void Update(void);											// 更新処理
+	virtual void Draw(void);											// 描画処理
 
 	void ModelCreate(CXfile::HIERARCHY_XFILE_NUM FileNum);			// モデルの生成
 	void ModelAnimeUpdate(void);									// モデルアニメーション
