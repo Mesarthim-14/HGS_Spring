@@ -21,6 +21,9 @@
 #include "sound.h"
 #include "score.h"
 #include "result_score.h"
+#include "perfect.h"
+#include "great.h"
+#include "nice.h"
 
 //=============================================================================
 //リザルトクラスのコンストラクタ
@@ -77,6 +80,15 @@ HRESULT CResult::Init(void)
 
 	//リザルトスコアの生成
 	CResultScore::Create();
+
+	//パーフェクト回数の生成
+	CPerfect::Create();
+
+	//グレート回数の生成
+	CGreat::Create();
+
+	//ナイス回数の生成
+	CNice::Create();
 
 	//サウンドの再生
 	GET_SOUND_PTR->Play(CSound::SOUND_LABEL_BGM_RESULT);
