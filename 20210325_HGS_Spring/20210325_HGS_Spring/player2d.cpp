@@ -26,6 +26,7 @@
 #include "score.h"
 #include "gauge.h"
 #include "fade.h"
+#include "number_2d.h"
 
 //=============================================================================
 // マクロ定義
@@ -93,6 +94,7 @@ HRESULT CPlayer2d::Init(void)
 	SetSpeed(PLAYER_SPEED);												// 速度の設定
 	m_pTimeLimit = CTimeLimit::Create(); // 制限時間の生成
 	m_bDeath = false;// 死亡フラグ
+
 	return S_OK;
 }
 
@@ -171,8 +173,6 @@ void CPlayer2d::UpdateState(void)
 //=============================================================================
 void CPlayer2d::PlayerControl()
 {
-	Move();
-
 	// サイズが空じゃなかったら
 	if (m_pScrollPolygon.size() != 0)
 	{
@@ -191,7 +191,6 @@ void CPlayer2d::PlayerControl()
 					// コントローラー振動
 					CManager::GetJoypad()->SetVibration(0);
 				}
-
 			}
 
 			// 入力の種類

@@ -157,6 +157,7 @@
     <ClInclude Include="fade.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="gauge.h" />
+    <ClInclude Include="great.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="joypad.h" />
     <ClInclude Include="keyboard.h" />
@@ -168,9 +169,11 @@
     <ClInclude Include="model.h" />
     <ClInclude Include="modelanime.h" />
     <ClInclude Include="motion.h" />
+    <ClInclude Include="nice.h" />
     <ClInclude Include="number_2d.h" />
     <ClInclude Include="order.h" />
     <ClInclude Include="particle.h" />
+    <ClInclude Include="perfect.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="player2d.h" />
     <ClInclude Include="player3d.h" />
@@ -204,6 +207,7 @@
     <ClCompile Include="fade.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="gauge.cpp" />
+    <ClCompile Include="great.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="joypad.cpp" />
     <ClCompile Include="keyboard.cpp" />
@@ -215,9 +219,11 @@
     <ClCompile Include="model.cpp" />
     <ClCompile Include="modelanime.cpp" />
     <ClCompile Include="motion.cpp" />
+    <ClCompile Include="nice.cpp" />
     <ClCompile Include="number_2d.cpp" />
     <ClCompile Include="order.cpp" />
     <ClCompile Include="particle.cpp" />
+    <ClCompile Include="perfect.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="player2d.cpp" />
     <ClCompile Include="player3d.cpp" />
