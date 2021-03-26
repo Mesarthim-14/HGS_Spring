@@ -31,6 +31,7 @@ CTimeLimit * CTimeLimit::Create(float fTime)
 	pTimeLimit->m_fTime = fTime;
 	pTimeLimit->m_fMaxTime = fTime;
 	pTimeLimit->Init();
+
 	return pTimeLimit;
 }
 
@@ -49,6 +50,7 @@ CTimeLimit::CTimeLimit()
 //=============================================================================
 CTimeLimit::~CTimeLimit()
 {
+	
 }
 
 //=============================================================================
@@ -65,6 +67,7 @@ HRESULT CTimeLimit::Init(void)
 //=============================================================================
 void CTimeLimit::Uninit(void)
 {
+	delete this;
 }
 
 //=============================================================================

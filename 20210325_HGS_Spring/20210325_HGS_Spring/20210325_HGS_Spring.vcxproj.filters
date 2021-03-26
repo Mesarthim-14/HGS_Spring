@@ -144,6 +144,9 @@
     <ClInclude Include="evaluation_ui.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="order.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="billboard.cpp">
@@ -273,6 +276,9 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="evaluation_ui.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="order.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>

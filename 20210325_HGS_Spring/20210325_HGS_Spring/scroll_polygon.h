@@ -18,6 +18,11 @@
 #define SCROLL_FRAME	(30)		// 移動するフレーム数
 
 //=======================================================================================
+// 前方宣言
+//=======================================================================================
+class COrder;
+
+//=======================================================================================
 // スクロールポリゴンクラス定義
 //=======================================================================================
 class CScrollPolygon: public CScene2D
@@ -47,6 +52,7 @@ public:
 
 	static CScrollPolygon* Create(D3DXVECTOR3 pos, D3DXVECTOR3 move, SCROLL_INFO ScrollInfo);			// インスタンス生成
 	HRESULT Init(void);						// 初期化処理
+	void Uninit(void);						// 終了処理
 	void Update(void);						// 更新処理
 
 	// Set関数
@@ -56,7 +62,9 @@ public:
 	bool GetEnd(void)				{ return m_bEnd ; }	// 終了フラグ
 	SCROLL_INFO GetScrollInfo(void) { return m_ScrollInfo; }
 	bool GetStop(void)				{ return m_bStop; }
+
 private:
+	COrder *m_pOrder;					// 命令Uiのポインタ
 	int m_nCounter;						// カウンター
 	SCROLL_INFO m_ScrollInfo;			// スクロール情報
 	D3DXVECTOR3 m_move;					// 移動量
