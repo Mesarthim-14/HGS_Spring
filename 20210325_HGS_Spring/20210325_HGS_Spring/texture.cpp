@@ -23,7 +23,7 @@ CTexture::CTexture()
 	m_aTexFileName =
 	{
 		{ "data/Texture/player.png" },
-
+		{ "data/Texture/particle001.png" },  // パーティクル
 	};
 
 	// 分割テクスチャの名前の設定

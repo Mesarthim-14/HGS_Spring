@@ -26,7 +26,8 @@ public:
 	typedef enum
 	{
 		TEXTURE_NUM_NONE = -1,		// 初期値
-		TEXTURE_NUM_PLAYER_2D,			// 2Dプレイヤー
+		TEXTURE_NUM_PLAYER_2D,		// 2Dプレイヤー
+		TEXTURE_NUM_PARTICLE,		// パーティクル
 		TEXTURE_NUM_MAX
 	}TEXTURE_TYPE;
 

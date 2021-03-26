@@ -21,6 +21,7 @@ CPolygon::CPolygon()
 	m_pVtxBuff = nullptr;
 	m_pos = ZeroVector3;
 	m_Size = ZeroVector3;
+	m_pTexture = NULL;
 }
 
 //=============================================================================
@@ -150,7 +151,7 @@ void CPolygon::Draw(void)
 	pD3DDevice->SetFVF(FVF_VERTEX_2D);
 
 	//テクスチャの設定
-	pD3DDevice->SetTexture(0, nullptr);
+	pD3DDevice->SetTexture(0, m_pTexture);
 
 	// ポリゴンの描画
 	pD3DDevice->DrawPrimitive(
@@ -180,5 +181,25 @@ void CPolygon::SetColor(const D3DXCOLOR color)
 	pVtx[3].col = color;
 
 	//頂点バッファのアンロック
+	m_pVtxBuff->Unlock();
+}
+
+//=============================================================================
+// 頂点位置の設定
+//=============================================================================
+void CPolygon::SetVertexPos(D3DXVECTOR3 pos[NUM_VERTEX])
+{
+	VERTEX_2D *pVtx;// 頂点情報ポインタ
+
+					// ロック
+	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
+
+	// 頂点カラーの設定
+	pVtx[0].pos = pos[0];
+	pVtx[1].pos = pos[1];
+	pVtx[2].pos = pos[2];
+	pVtx[3].pos = pos[3];
+
+	// アンロック
 	m_pVtxBuff->Unlock();
 }

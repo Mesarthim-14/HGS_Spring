@@ -24,6 +24,12 @@
 #include "resource_manager.h"
 #include "fade.h"
 #include "map_manager.h"
+#include "score.h"
+
+
+
+#include "particle.h"
+#include "time_limit.h"
 
 //=======================================================================================
 // static初期化
@@ -90,6 +96,8 @@ HRESULT CGame::Init()
 	D3DXCreateFont(pD3DDevice, 18, 0, 0, 0, FALSE, SHIFTJIS_CHARSET,
 		OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH, "Terminal", &m_pFont);
 
+	// スコアクラスの生成
+	CScore::Create();
 
 	return S_OK;
 }
@@ -117,6 +125,8 @@ void CGame::Uninit(void)
 
 	//オブジェクトの破棄
 	Release();
+
+	CScore::Release();
 }
 
 //=======================================================================================
@@ -143,6 +153,13 @@ void CGame::Update(void)
 		pFade->SetFade(CManager::MODE_TYPE_RESULT);
 	}
 
+	// 仮置き////////////////////////////////////////////////////////////////////////
+	if (pKey->GetTrigger(DIK_SPACE)) CParticlre::CreateDeath(D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), CParticlre::DEATH_PART_TYPE_ALL);
+	if (pKey->GetTrigger(DIK_UP)) CParticlre::CreateDeath(D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), CParticlre::DEATH_PART_TYPE_UP);
+	if (pKey->GetTrigger(DIK_DOWN)) CParticlre::CreateDeath(D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), CParticlre::DEATH_PART_TYPE_DOWN);
+	if (pKey->GetTrigger(DIK_LEFT)) CParticlre::CreateDeath(D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), CParticlre::DEATH_PART_TYPE_LEFT);
+	if (pKey->GetTrigger(DIK_RIGHT)) CParticlre::CreateDeath(D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), CParticlre::DEATH_PART_TYPE_RIGHT);
+	/////////////////////////////////////////////////////////////////////////////////
 }
 
 //=======================================================================================
