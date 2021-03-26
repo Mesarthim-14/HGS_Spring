@@ -25,6 +25,7 @@
 #include "time_limit.h"
 #include "score.h"
 #include "gauge.h"
+#include "fade.h"
 
 //=============================================================================
 // マクロ定義
@@ -90,7 +91,7 @@ HRESULT CPlayer2d::Init(void)
 	CCharacter2d::Init();												// 座標　角度
 	SetRadius(PLAYER_RADIUS);											// 半径の設定
 	SetSpeed(PLAYER_SPEED);												// 速度の設定
-	m_pTimeLimit = CTimeLimit::Create(DEFAULT_TIME); // 制限時間の生成
+	m_pTimeLimit = CTimeLimit::Create(); // 制限時間の生成
 	m_bDeath = false;// 死亡フラグ
 	return S_OK;
 }
@@ -125,17 +126,19 @@ void CPlayer2d::Update(void)
 	// プレイヤーの制御
 	PlayerControl();
 
+	// 親クラスの更新処理
+	CCharacter2d::Update();
+
 	// 死亡チェック
 	if (m_bDeath)
 	{
 		// リザルトに遷移処理
+		CFade *pFade = CManager::GetFade();
+		pFade->SetFade(CManager::MODE_TYPE_RESULT);
 
 		//// コントローラー振動
 		//CManager::GetJoypad()->SetVibration(0);
 	}
-
-	// 親クラスの更新処理
-	CCharacter2d::Update();
 }
 
 //=============================================================================
@@ -240,7 +243,7 @@ void CPlayer2d::PlayerControl()
 				m_pTimeLimit->Uninit();
 				m_pTimeLimit = NULL;
 
-				m_pTimeLimit = CTimeLimit::Create(DEFAULT_TIME); // 制限時間の生成
+				m_pTimeLimit = CTimeLimit::Create(); // 制限時間の生成
 			}
 		}
 	}

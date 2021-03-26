@@ -16,7 +16,9 @@
 //=============================================================================
 // マクロ定義
 //=============================================================================
-#define DEFAULT_TIME 200
+#define DEFAULT_TIME 300.0f
+#define TIME_MIN 25.0f
+#define MAX_TIME_SCORE 80
 
 //=============================================================================
 // 前方宣言
@@ -33,7 +35,7 @@ public:
 	CTimeLimit();			// コンストラクタ
 	~CTimeLimit();												// デストラクタ
 
-	static CTimeLimit*Create(float fTime);	// クリエイト
+	static CTimeLimit*Create(void);	// クリエイト
 
 	HRESULT Init(void);				// 初期化処理
 	void Uninit(void);				// 終了処理
