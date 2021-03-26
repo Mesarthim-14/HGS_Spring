@@ -19,6 +19,7 @@
 // 前方宣言
 //=============================================================================
 class CScrollPolygon;
+class CTimeLimit;
 
 //=============================================================================
 // プレイヤー2Dクラス
@@ -44,6 +45,8 @@ public:
 	void SetScrollPolygon(CScrollPolygon *pScrollPolygon);	// スクロールポリゴンのポインタ
 private:
 	std::vector<CScrollPolygon*> m_pScrollPolygon;	// 現在のスクロール情報のポインタ
+	CTimeLimit * m_pTimeLimit;
+	bool m_bDeath; // 志望
 	
 };
 #endif

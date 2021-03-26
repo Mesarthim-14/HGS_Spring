@@ -24,6 +24,9 @@ CTexture::CTexture()
 	{
 		{ "data/Texture/player.png" },
 		{ "data/Texture/particle001.png" },  // パーティクル
+		{ "data/Texture/Nice.png" },         // nice
+		{ "data/Texture/Great.png" },        // great
+		{ "data/Texture/Parfect.png" },      // parfect
 	};
 
 	// 分割テクスチャの名前の設定

@@ -372,7 +372,7 @@ void CScene2D::SetRotation(float rotasion)
 	// âÒì]ÇÃílÇâ¡éZ
 	 m_fRotasion += rotasion;
 
-	float r = sqrtf(powf(size.x , 2.0) + powf(size.x , 2.0));	//îºåa
+	float r = sqrtf(powf(size.x , 2.0) + powf(size.y , 2.0));	//îºåa
 	float fTheta = atan2(size.x , size.x );					//ÉVÅ[É^
 
 	float XAngle = r*cos(fTheta + m_fRotasion);	//XÇÃäpìx

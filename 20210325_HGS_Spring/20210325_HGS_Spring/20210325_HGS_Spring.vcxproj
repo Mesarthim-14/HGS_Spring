@@ -153,6 +153,7 @@
     <ClInclude Include="character2d.h" />
     <ClInclude Include="character3d.h" />
     <ClInclude Include="collision.h" />
+    <ClInclude Include="evaluation_ui.h" />
     <ClInclude Include="fade.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="gauge.h" />
@@ -196,6 +197,7 @@
     <ClCompile Include="character2d.cpp" />
     <ClCompile Include="character3d.cpp" />
     <ClCompile Include="collision.cpp" />
+    <ClCompile Include="evaluation_ui.cpp" />
     <ClCompile Include="fade.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="gauge.cpp" />

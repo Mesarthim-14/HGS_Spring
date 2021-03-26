@@ -26,7 +26,7 @@ class CMeshField;
 class CPlayer2d;
 class CPlayer3d;
 class CMapManager;
-
+class CEvaluation;
 // 入力の種類の列挙型
 enum INPUT_TYPE
 {
@@ -59,6 +59,7 @@ public:
 	static CPlayer2d *GetPlayer2d(void) { return m_pPlayer2d; }		// プレイヤーのポインタ情報
 	static CPlayer3d *GetPlayer3d(void) { return m_pPlayer3d; }	// プレイヤーのポインタ
 	static CMapManager *GetMapManager(void) { return m_pMapManager; }	// マップマネージャのポインタ情報
+	static CEvaluation *GetEvaluation(void) { return m_pEvaluation; }	// マップマネージャのポインタ情報
 
 private:	
 	static CCamera *m_pCamera;			// カメラのポインタ	
@@ -66,6 +67,7 @@ private:
 	static CPlayer2d *m_pPlayer2d;				// プレイヤー2Dのポインタ
 	static CPlayer3d *m_pPlayer3d;		// プレイヤー3Dのポインタ
 	static CMapManager *m_pMapManager;			// マップマネージャーのポインタ
+	static CEvaluation *m_pEvaluation;  // 評価UIクラス
 	LPD3DXFONT m_pFont;					// デバック用フォント
 	int m_nTimeCounter;					// ゲームのカウンター
 	bool m_bGameEnd;					// ゲームのエンドフラグ
