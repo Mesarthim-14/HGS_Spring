@@ -173,6 +173,7 @@
     <ClInclude Include="player2d.h" />
     <ClInclude Include="player3d.h" />
     <ClInclude Include="polygon.h" />
+    <ClInclude Include="ranking.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="resource_manager.h" />
     <ClInclude Include="result.h" />
@@ -216,6 +217,7 @@
     <ClCompile Include="player2d.cpp" />
     <ClCompile Include="player3d.cpp" />
     <ClCompile Include="polygon.cpp" />
+    <ClCompile Include="ranking.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="resource_manager.cpp" />
     <ClCompile Include="result.cpp" />
