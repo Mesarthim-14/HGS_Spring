@@ -15,13 +15,15 @@
 //====================================================
 CSound::PARAM CSound::m_aParam[SOUND_LABEL_MAX] =
 {
-	{ "data/BGM/title001.wav", SOUND_LOOP_ON },			// タイトルBGM
-	{ "data/BGM/game001.wav", SOUND_LOOP_ON },			// ゲームBGM
-	{ "data/BGM/slash.wav", SOUND_LOOP_OFF },			// 斬撃音
-	{ "data/BGM/stomp.wav", SOUND_LOOP_OFF },			// 叩きつけ
-	{ "data/BGM/sword_skill.wav", SOUND_LOOP_OFF },		// ソードスキル
-	{ "data/BGM/roar_cry.wav", SOUND_LOOP_OFF },		// 叫び
-	{ "data/BGM/roar_fire.wav", SOUND_LOOP_OFF },		// 叫び炎
+	{ "data/Sound/BGM/title.wav", SOUND_LOOP_ON },			// タイトル
+	{ "data/Sound/BGM/game.wav", SOUND_LOOP_ON },			// ゲーム
+	{ "data/Sound/BGM/result.wav", SOUND_LOOP_ON },			// リザルト
+	{ "data/Sound/SE/decision.wav", SOUND_LOOP_OFF },		// 決定
+	{ "data/Sound/SE/game_over.wav", SOUND_LOOP_OFF },		// ゲームオーバー
+	{ "data/Sound/SE/score_count.wav", SOUND_LOOP_OFF },	// スコアカウント中
+	{ "data/Sound/SE/score_finish.wav", SOUND_LOOP_OFF },	// スコアカウント終了
+	{ "data/Sound/SE/swipe.wav", SOUND_LOOP_OFF },			// スワイプ
+
 };
 
 //================================================
@@ -183,15 +185,23 @@ HRESULT CSound::Init(void)
 		m_apSourceVoice[nCntSound]->SubmitSourceBuffer(&buffer);
 
 		// オーディオバッファの登録
-		//m_apSourceVoice[nCntSound]->SetVolume(0.5f);
-		m_apSourceVoice[nCntSound]->SetVolume(0.01f);
+		m_apSourceVoice[nCntSound]->SetVolume(0.5f);
+		//m_apSourceVoice[nCntSound]->SetVolume(0.01f);
 
 		// ファイルをクローズ
 		CloseHandle(hFile);
 	}
 
-	//斬撃音のボリュームを設定
-	m_apSourceVoice[SOUND_LABEL_SE_SLASH]->SetVolume(0.1f);
+	//ボリュームを設定
+	m_apSourceVoice[SOUND_LABEL_BGM_TITLE]->SetVolume(2.0f);
+	m_apSourceVoice[SOUND_LABEL_BGM_GAME]->SetVolume(0.7f);
+	m_apSourceVoice[SOUND_LABEL_BGM_RESULT]->SetVolume(1.1f);
+	m_apSourceVoice[SOUND_LABEL_SE_DECISION]->SetVolume(1.8f);
+	m_apSourceVoice[SOUND_LABEL_SE_GAME_OVER]->SetVolume(1.0f);
+	m_apSourceVoice[SOUND_LABEL_SE_SCORE_COUNT]->SetVolume(1.0f);
+	m_apSourceVoice[SOUND_LABEL_SE_SCORE_FINISH]->SetVolume(1.0f);
+	m_apSourceVoice[SOUND_LABEL_SE_SWIPE]->SetVolume(1.0f);
+
 	return S_OK;
 }
 

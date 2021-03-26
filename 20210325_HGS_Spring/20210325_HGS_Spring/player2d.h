@@ -41,8 +41,9 @@ public:
 	void PlayerControl(void);								// プレイヤーの制御
 	INPUT_TYPE InputDirection(void);						// 方向の入力処理
 	void Move(void);										// プレイヤーの歩く処理
-	bool InputJudg(INPUT_TYPE InputType);									// 入力処理の判定
+	bool InputJudg(INPUT_TYPE InputType);					// 入力処理の判定
 	void SetScrollPolygon(CScrollPolygon *pScrollPolygon);	// スクロールポリゴンのポインタ
+	void ChangeTexture(INPUT_TYPE InputType);				// テクスチャの変更
 private:
 	std::vector<CScrollPolygon*> m_pScrollPolygon;	// 現在のスクロール情報のポインタ
 	CTimeLimit * m_pTimeLimit;

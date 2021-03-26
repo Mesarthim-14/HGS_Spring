@@ -40,17 +40,25 @@ CPlayer2d * CPlayer2d::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size)
 {
 	// 初期化処理
 	CPlayer2d *pPlayer = new CPlayer2d;
-	CTexture *pTexture = GET_TEXTURE_PTR;
 
 	// !nullcheck
 	if (pPlayer != nullptr)
 	{
 		// 座標
 		pPlayer->SetSceneInfo(pos, size);
-		pPlayer->BindTexture(pTexture->GetTexture(CTexture::TEXTURE_NUM_PLAYER_2D));
 
 		// 初期化処理
 		pPlayer->Init();
+
+		// テクスチャの設定
+		CTexture *pTexture = GET_TEXTURE_PTR;
+		pPlayer->BindTexture(pTexture->GetSeparateTexture(CTexture::SEPARATE_TEX_PLAYER_NEUTRAL));
+		D3DXVECTOR2 TexInfo = pTexture->GetSparateTexInfo(CTexture::SEPARATE_TEX_PLAYER_NEUTRAL);
+		bool bLoop = pTexture->GetSparateTexLoop(CTexture::SEPARATE_TEX_PLAYER_NEUTRAL);
+
+		// アニメーションの設定
+		pPlayer->InitAnimation((int)TexInfo.x, (int)TexInfo.y, bLoop);
+
 	}
 
 	return pPlayer;
@@ -59,7 +67,7 @@ CPlayer2d * CPlayer2d::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size)
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-CPlayer2d::CPlayer2d(PRIORITY Priority)
+CPlayer2d::CPlayer2d(PRIORITY Priority) : CCharacter2d(Priority)
 {
 	m_pScrollPolygon.clear();
 	m_pTimeLimit = NULL;
@@ -141,6 +149,8 @@ void CPlayer2d::UpdateState(void)
 //=============================================================================
 void CPlayer2d::PlayerControl()
 {
+	Move();
+
 	// サイズが空じゃなかったら
 	if (m_pScrollPolygon.size() != 0)
 	{
@@ -175,6 +185,16 @@ void CPlayer2d::PlayerControl()
 					// スコア加算
 					CScore::GetScorePointa()->AddScore(m_pTimeLimit->CheckEvaluation());
 					
+					// テクスチャの変更
+					ChangeTexture(InputType);
+
+					// スクロールポリゴン情報の破棄
+					m_pScrollPolygon.pop_back();
+
+					CMapManager *pMapManager = CGame::GetMapManager();
+
+					// 次のマップ生成
+					pMapManager->CreateMap(InputType);
 				}
 				else
 				{// 衝突の判定
@@ -317,5 +337,36 @@ void CPlayer2d::SetScrollPolygon(CScrollPolygon * pScrollPolygon)
 	{
 		// スクロールポリゴンの設定
 		m_pScrollPolygon.push_back(pScrollPolygon);
+	}
+}
+
+//=============================================================================
+// テクスチャの変更
+//=============================================================================
+void CPlayer2d::ChangeTexture(INPUT_TYPE InputType)
+{
+	// ポインタ取得
+	CTexture *pTexture = GET_TEXTURE_PTR;
+
+	// 判定
+	switch (InputType)
+	{
+	case INPUT_TYPE_UP:
+		// テクスチャの設定
+		BindTexture(pTexture->GetSeparateTexture(CTexture::SEPARATE_TEX_PLAYER_UP));
+		break;
+
+	case INPUT_TYPE_DOWN:
+		// テクスチャの設定
+		BindTexture(pTexture->GetSeparateTexture(CTexture::SEPARATE_TEX_PLAYER_DOWN));
+		break;
+	case INPUT_TYPE_RIGHT:
+		// テクスチャの設定
+		BindTexture(pTexture->GetSeparateTexture(CTexture::SEPARATE_TEX_PLAYER_RIGHT));
+		break;
+	case INPUT_TYPE_LEFT:
+		// テクスチャの設定
+		BindTexture(pTexture->GetSeparateTexture(CTexture::SEPARATE_TEX_PLAYER_LEFT));
+		break;
 	}
 }

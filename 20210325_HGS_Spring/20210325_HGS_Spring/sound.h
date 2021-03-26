@@ -19,14 +19,14 @@ class CSound
 public:
 	typedef enum
 	{
-		SOUND_LABEL_BGM_TITLE = 0,		// BGM0
-		SOUND_LABEL_BGM_GAME,			// BGM1
-		SOUND_LABEL_SE_SLASH,			// 斬撃音
-		SOUND_LABEL_SE_STOMP,			// 叩きつけ
-		SOUND_LABEL_SE_SWORD_SKILL,		// ソードスキル
-		SOUND_LABEL_SE_ROAR_CRY,		// 叫び声
-		SOUND_LABEL_SE_ROAR_FIRE,		// 炎
-
+		SOUND_LABEL_BGM_TITLE = 0,		// タイトル
+		SOUND_LABEL_BGM_GAME,			// ゲーム
+		SOUND_LABEL_BGM_RESULT,			// リザルト
+		SOUND_LABEL_SE_DECISION,		// 決定
+		SOUND_LABEL_SE_GAME_OVER,		// ゲームオーバー
+		SOUND_LABEL_SE_SCORE_COUNT,		// スコアカウント中
+		SOUND_LABEL_SE_SCORE_FINISH,	// スコアカウント終了
+		SOUND_LABEL_SE_SWIPE,			// スワイプ
 		SOUND_LABEL_MAX,
 	} SOUND_LABEL;
 
@@ -40,7 +40,7 @@ public:
 	~CSound();							// デストラクタ
 
 	static CSound *Create(void);		// インスタンス生成
-	HRESULT Init(void);			// 初期化処理
+	HRESULT Init(void);					// 初期化処理
 	void Uninit(void);					// 終了処理
 	HRESULT Play(SOUND_LABEL label);	// サウンド再生
 	void Stop(SOUND_LABEL label);		// サウンドストップ

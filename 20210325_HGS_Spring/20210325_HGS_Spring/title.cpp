@@ -77,6 +77,9 @@ HRESULT CTitle::Init()
 		}
 	}
 
+	//サウンドの再生
+	GET_SOUND_PTR->Play(CSound::SOUND_LABEL_BGM_TITLE);
+
 	return S_OK;
 }
 
@@ -85,6 +88,9 @@ HRESULT CTitle::Init()
 //=============================================================================
 void CTitle::Uninit(void)
 {
+	//サウンドの停止
+	GET_SOUND_PTR->Stop(CSound::SOUND_LABEL_BGM_TITLE);
+
 	if (m_pScene2D != nullptr)
 	{
 		m_pScene2D->Uninit();
@@ -122,6 +128,9 @@ void CTitle::Update(void)
 	{
 		CFade *pFade = CManager::GetFade();
 		pFade->SetFade(CManager::MODE_TYPE_GAME);
+
+		//サウンドの再生
+		GET_SOUND_PTR->Play(CSound::SOUND_LABEL_SE_DECISION);
 	}
 
 	if (m_pPress != nullptr)
