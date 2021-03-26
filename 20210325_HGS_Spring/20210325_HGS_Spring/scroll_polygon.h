@@ -71,6 +71,7 @@ private:
 	bool m_bSecondMove;					// 二度目の移動
 	bool m_bEnd;						// 終了フラグ
 	bool m_bStop;						// 止まったフラグ
+	int m_nEndCounter;
 };
 
 #endif

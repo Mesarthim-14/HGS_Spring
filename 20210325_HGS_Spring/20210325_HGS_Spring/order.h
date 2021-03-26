@@ -14,16 +14,12 @@
 #include "scroll_polygon.h"
 
 //=============================================================================
-// 前方宣言
-//=============================================================================
-
-//=============================================================================
 // オーダークラス
 //=============================================================================
 class COrder : public CScene2D
 {
 public:
-	COrder(PRIORITY Priority = PRIORITY_UI);			// コンストラクタ
+	COrder(PRIORITY Priority = PRIORITY_1);			// コンストラクタ
 	~COrder();											// デストラクタ
 
 	static COrder*Create(D3DXVECTOR3 pos, CScrollPolygon::SCROLL_INFO ScrollInfo);	// クリエイト

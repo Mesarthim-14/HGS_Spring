@@ -73,14 +73,13 @@ CGame* CGame::Create(void)
 //=======================================================================================
 HRESULT CGame::Init()
 {
-
 	// スコアクラスの生成
 	CScore::Create();
 
 	// nullcheck
 	if (m_pPlayer2d == nullptr)
 	{
-		m_pPlayer2d = CPlayer2d::Create(ZeroVector3, D3DXVECTOR3(50.0f, 50.0f, 50.0f));
+		m_pPlayer2d = CPlayer2d::Create(D3DXVECTOR3(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 50.0f));
 	}
 
 	// nullcheck
@@ -126,7 +125,7 @@ void CGame::Uninit(void)
 	if (m_pMapManager != nullptr)
 	{
 		// マップマネージャのインスタンス生成
-		delete m_pMapManager;
+		m_pMapManager->Uninit();
 		m_pMapManager = nullptr;
 	}
 
@@ -145,6 +144,7 @@ void CGame::Update(void)
 		// マップマネージャのインスタンス生成
 		m_pMapManager->Update();
 	}
+
 
 	CInputKeyboard* pKey = CManager::GetKeyboard();
 	CFade::FADE_MODE mode = CManager::GetFade()->GetFade();
