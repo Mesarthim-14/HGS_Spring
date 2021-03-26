@@ -292,7 +292,7 @@ void CPlayer2d::Move(void)
 	{
 		float fAngle = atan2f((float)js.lX, (float)js.lY);	// コントローラの角度
 
-	// 移動量設定
+		// 移動量設定
 		GetPos().x += sinf(fAngle)* fSpeed;
 		GetPos().y += cosf(fAngle)* fSpeed;
 	}

@@ -127,7 +127,7 @@ void CTitle::Update(void)
 		|| pKey->GetTrigger(DIK_RETURN) && mode == CFade::FADE_MODE_NONE)
 	{
 		CFade *pFade = CManager::GetFade();
-		pFade->SetFade(CManager::MODE_TYPE_GAME);
+		pFade->SetFade(CManager::MODE_TYPE_TUTORIAL);
 
 		//ƒTƒEƒ“ƒh‚ÌÄ¶
 		GET_SOUND_PTR->Play(CSound::SOUND_LABEL_SE_DECISION);

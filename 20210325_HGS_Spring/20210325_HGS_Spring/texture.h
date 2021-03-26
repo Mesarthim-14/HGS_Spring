@@ -58,6 +58,7 @@ public:
 		TEXTURE_NUM_NOT_LEFT_E,		// ç∂Ç∂Ç·Ç»Ç¢
 		TEXTURE_NUM_NOT_LEFT_J,		// ç∂Ç∂Ç·Ç»Ç¢
 		TEXTURE_NUM_NOT_LEFT_M,		// ç∂Ç∂Ç·Ç»Ç¢
+		TEXTURE_NUM_TUTOTIRAL,		// ç∂Ç∂Ç·Ç»Ç¢
 		TEXTURE_NUM_MAX
 	}TEXTURE_TYPE;
 
