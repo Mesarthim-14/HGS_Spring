@@ -73,7 +73,9 @@ HRESULT CTitle::Init()
 
 		if (m_pScene2D != nullptr)
 		{
-			m_pScene2D->BindTexture(nullptr);
+			// テクスチャ割り当て
+			CTexture *pTexture = GET_TEXTURE_PTR;
+			m_pScene2D->BindTexture(pTexture->GetTexture(CTexture::TEXTURE_NUM_TITLE));
 		}
 	}
 

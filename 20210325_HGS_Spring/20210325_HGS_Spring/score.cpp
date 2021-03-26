@@ -116,6 +116,10 @@ void CScore::AddScore(CEvaluation::EVALUATION_TYPE type)
 {
 	// スコア加算
 	m_score.nScore++;
+	if (m_score.nScore > 99)
+	{
+		m_score.nScore = 99;
+	}
 
 	// 各値の加算
 	switch (type)
