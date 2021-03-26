@@ -24,6 +24,7 @@
 #include "particle.h"
 #include "time_limit.h"
 #include "score.h"
+#include "gauge.h"
 
 //=============================================================================
 // マクロ定義
@@ -89,7 +90,7 @@ HRESULT CPlayer2d::Init(void)
 	CCharacter2d::Init();												// 座標　角度
 	SetRadius(PLAYER_RADIUS);											// 半径の設定
 	SetSpeed(PLAYER_SPEED);												// 速度の設定
-	m_pTimeLimit = CTimeLimit::Create(300); // 制限時間の生成
+	m_pTimeLimit = CTimeLimit::Create(DEFAULT_TIME); // 制限時間の生成
 	m_bDeath = false;// 死亡フラグ
 	return S_OK;
 }
@@ -99,6 +100,12 @@ HRESULT CPlayer2d::Init(void)
 //=============================================================================
 void CPlayer2d::Uninit(void)
 {
+	if (m_pTimeLimit != NULL)
+	{
+		m_pTimeLimit->Uninit();
+		m_pTimeLimit = NULL;
+	}
+
 	// 終了処理
 	CCharacter2d::Uninit();
 }
@@ -120,8 +127,11 @@ void CPlayer2d::Update(void)
 
 	// 死亡チェック
 	if (m_bDeath)
-	{// リザルトに遷移処理
+	{
+		// リザルトに遷移処理
 
+		//// コントローラー振動
+		//CManager::GetJoypad()->SetVibration(0);
 	}
 
 	// 親クラスの更新処理
@@ -166,6 +176,8 @@ void CPlayer2d::PlayerControl()
 					m_bDeath = true;
 					// パーティクル生成
 					CParticlre::CreateDeath(D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), CParticlre::DEATH_PART_TYPE_ALL);
+					// コントローラー振動
+					CManager::GetJoypad()->SetVibration(0);
 				}
 
 			}
@@ -198,7 +210,7 @@ void CPlayer2d::PlayerControl()
 				}
 				else
 				{// 衝突の判定
-					//if (m_bDeath == false)
+					if (m_bDeath == false)
 					{// 死亡フラグがfalseの時
 						
 						// フラグをtrueに
@@ -209,6 +221,8 @@ void CPlayer2d::PlayerControl()
 						else if (InputType == INPUT_TYPE_DOWN)  CParticlre::CreateDeath(D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), CParticlre::DEATH_PART_TYPE_DOWN);
 						else if (InputType == INPUT_TYPE_LEFT)  CParticlre::CreateDeath(D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), CParticlre::DEATH_PART_TYPE_LEFT);
 						else if (InputType == INPUT_TYPE_RIGHT) CParticlre::CreateDeath(D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), CParticlre::DEATH_PART_TYPE_RIGHT);
+						// コントローラー振動
+						CManager::GetJoypad()->SetVibration(0);
 					}
 				}
 
@@ -220,9 +234,13 @@ void CPlayer2d::PlayerControl()
 				// 次のマップ生成
 				pMapManager->CreateMap(InputType);
 
+				// ゲージ消す
+				m_pTimeLimit->GetGauge()->Uninit();
+				// 制限時間消す
 				m_pTimeLimit->Uninit();
 				m_pTimeLimit = NULL;
-				m_pTimeLimit = CTimeLimit::Create(300); // 制限時間の生成
+
+				m_pTimeLimit = CTimeLimit::Create(DEFAULT_TIME); // 制限時間の生成
 			}
 		}
 	}
@@ -234,20 +252,21 @@ void CPlayer2d::PlayerControl()
 INPUT_TYPE CPlayer2d::InputDirection(void)
 {
 	CInputKeyboard *pKeyboard = CManager::GetKeyboard();					// キーボード更新
+	CInputJoypad *pJoyPad = CManager::GetJoypad();  // ジョイパッドの取得
 
-	if (pKeyboard->GetTrigger(DIK_W))
+	if (pKeyboard->GetTrigger(DIK_W) || pJoyPad->GetPushCross(CROSS_KEY_UP) || pJoyPad->GetStick().lY >= 600)
 	{
 		return INPUT_TYPE_UP;
 	}
-	else if (pKeyboard->GetTrigger(DIK_A))
+	else if (pKeyboard->GetTrigger(DIK_A) || pJoyPad->GetPushCross(CROSS_KEY_LEFT) || pJoyPad->GetStick().lX >= 600)
 	{
 		return INPUT_TYPE_LEFT;
 	}
-	else if (pKeyboard->GetTrigger(DIK_S))
+	else if (pKeyboard->GetTrigger(DIK_S) || pJoyPad->GetPushCross(CROSS_KEY_DOWN) || pJoyPad->GetStick().lY <= -600)
 	{
 		return INPUT_TYPE_DOWN;
 	}
-	else if (pKeyboard->GetTrigger(DIK_D))
+	else if (pKeyboard->GetTrigger(DIK_D) || pJoyPad->GetPushCross(CROSS_KEY_RIGHT) || pJoyPad->GetStick().lX <= -600)
 	{
 		return INPUT_TYPE_RIGHT;
 	}
@@ -264,10 +283,7 @@ void CPlayer2d::Move(void)
 	CInputKeyboard *pKeyboard = CManager::GetKeyboard();					// キーボード更新
 	DIJOYSTATE js = CManager::GetJoypad()->GetStick();						// ジョイパッドの取得
 	float fSpeed = GetSpeed();												// スピード
-	if (CManager::GetJoypad()->GetJoyStickTrigger(0))
-	{
-		CManager::GetJoypad()->SetVibration(0);
-	}
+
 	//入力が存在する
 	if ((js.lX != 0.0f || js.lY != 0.0f))
 	{
