@@ -257,19 +257,19 @@ INPUT_TYPE CPlayer2d::InputDirection(void)
 	CInputKeyboard *pKeyboard = CManager::GetKeyboard();					// キーボード更新
 	CInputJoypad *pJoyPad = CManager::GetJoypad();  // ジョイパッドの取得
 
-	if (pKeyboard->GetTrigger(DIK_W) || pJoyPad->GetPushCross(CROSS_KEY_UP) || pJoyPad->GetStick().lY >= 600)
+	if (pKeyboard->GetTrigger(DIK_W) || pJoyPad->GetPushCross(CROSS_KEY_UP) || pJoyPad->GetStick().lY <= -600)
 	{
 		return INPUT_TYPE_UP;
 	}
-	else if (pKeyboard->GetTrigger(DIK_A) || pJoyPad->GetPushCross(CROSS_KEY_LEFT) || pJoyPad->GetStick().lX >= 600)
+	else if (pKeyboard->GetTrigger(DIK_A) || pJoyPad->GetPushCross(CROSS_KEY_LEFT) || pJoyPad->GetStick().lX <= -600)
 	{
 		return INPUT_TYPE_LEFT;
 	}
-	else if (pKeyboard->GetTrigger(DIK_S) || pJoyPad->GetPushCross(CROSS_KEY_DOWN) || pJoyPad->GetStick().lY <= -600)
+	else if (pKeyboard->GetTrigger(DIK_S) || pJoyPad->GetPushCross(CROSS_KEY_DOWN) || pJoyPad->GetStick().lY >= 600)
 	{
 		return INPUT_TYPE_DOWN;
 	}
-	else if (pKeyboard->GetTrigger(DIK_D) || pJoyPad->GetPushCross(CROSS_KEY_RIGHT) || pJoyPad->GetStick().lX <= -600)
+	else if (pKeyboard->GetTrigger(DIK_D) || pJoyPad->GetPushCross(CROSS_KEY_RIGHT) || pJoyPad->GetStick().lX >= 600)
 	{
 		return INPUT_TYPE_RIGHT;
 	}
