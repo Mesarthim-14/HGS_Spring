@@ -15,10 +15,10 @@
 // マクロ定義
 //=============================================================================
 #define GAUGE_WIDGHT 800.0f
-#define GAUGE_HEIGHT 15.0f
-//#define GAUGE_COLOR D3DXCOLOR(1.0f,1.0f,1.0f,1.0f)
-#define GAUGE_COLOR D3DXCOLOR(1.0f,1.0f,0.0f,1.0f)
-#define GAUGE_LEFT_POS D3DXVECTOR3((SCREEN_WIDTH/2) - GAUGE_WIDGHT / 2 ,200.0f,0.0f)
+#define GAUGE_HEIGHT 10.0f
+#define GAUGE_COLOR D3DXCOLOR(1.0f,1.0f,1.0f,1.0f)
+//#define GAUGE_COLOR D3DXCOLOR(1.0f,1.0f,0.0f,1.0f)
+#define GAUGE_LEFT_POS D3DXVECTOR3((SCREEN_WIDTH/2) - GAUGE_WIDGHT / 2 ,150.0f,0.0f)
 
 //=============================================================================
 // クリエイト
