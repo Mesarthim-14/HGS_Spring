@@ -1,247 +1,340 @@
 //=============================================================================
 //
-// ジョイパッドクラスの処理[joypad.cpp]
-// Author : Konishi Yuuto
+// メイン処理 [inputcontroller.cpp]
+// Author : Masuzawa Mirai
 //
-//=============================================================================
-
-//=============================================================================
-// インクルード
 //=============================================================================
 #include "joypad.h"
 
 //=============================================================================
-// 静的メンバ変数宣言
+//マクロ定義
 //=============================================================================
-int CInputJoypad::m_nJoyStickCont = 0;
-LPDIRECTINPUTDEVICE8  CInputJoypad::m_apDevice[MAX_JOYSTICK_NUM] = {};
+#define MAN_RANGE 1000	//スティックの最大範囲
+#define MIN_RANGE -1000	//スティックの最小範囲
 
-//=====================================================
-// コンストラクタ
-//=====================================================
+//=============================================================================
+//静的メンバ変数宣言
+//=============================================================================
+LPDIRECTINPUTDEVICE8 CInputJoypad::m_pJoyDevice = NULL;
+LPDIRECTINPUTEFFECT  CInputJoypad::m_lpDIEffect[JOYPAD_EFFECT_NUM] = {};             // エフェクト振動用
+DWORD                CInputJoypad::m_dwNumForceFeedbackAxis[JOYPAD_EFFECT_NUM] = {}; // 
+
+//=============================================================================
+//ジョイスティッククラスのコンストラクタ
+//=============================================================================
 CInputJoypad::CInputJoypad()
 {
-	memset(m_aJoyState, 0, sizeof(m_aJoyState));
-	memset(m_aJoyStateTrigger, 0, sizeof(m_aJoyState));
-	memset(m_aJoyStateRelease, 0, sizeof(m_aJoyState));
-	memset(m_JoyPadState, 0, sizeof(m_JoyPadState));
+	memset(&m_JoyState, 0, sizeof(m_JoyState));
 }
 
-//=====================================================
-// デストラクタ
-//=====================================================
+//=============================================================================
+//ジョイスティッククラスのデストラクタ
+//=============================================================================
 CInputJoypad::~CInputJoypad()
 {
 }
 
-//=====================================================
-// 初期化処理
-//=====================================================
+//=============================================================================
+//ジョイスティッククラスの初期化処理
+//=============================================================================
 HRESULT CInputJoypad::Init(HINSTANCE hInstance, HWND hWnd)
 {
-	HRESULT  hr[MAX_JOYSTICK_NUM];
-	m_nJoyStickCont = 0;
+	//入力処理の初期化
+	CInput::Init(hInstance, hWnd);
 
-	for (int nCntJoyStick = 0; nCntJoyStick < MAX_JOYSTICK_NUM; nCntJoyStick++)
+	//ジョイスティックの列挙
+	if (FAILED(m_pInput->EnumDevices(
+		DI8DEVCLASS_GAMECTRL,	//列挙したいデバイスの種類
+		DeviceFindCallBack,		//デバイスが列挙した際に実行される関数ポインタ(コールバック関数)
+		NULL,					//第二引数実行時に引数として渡されるデータのポインタ
+		DIEDFL_FORCEFEEDBACK | DIEDFL_ATTACHEDONLY)))	//取得するデバイスを限定するかどうかのフラグ
 	{
-		hr[nCntJoyStick] = DirectInput8Create(hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8,
-			(void**)&m_pInput, NULL);
+		return E_FAIL;
 	}
-
-	hr[m_nJoyStickCont] = m_pInput->EnumDevices(DI8DEVCLASS_GAMECTRL, EnumJoysticksCallback, NULL, DIEDFL_ATTACHEDONLY);
-
-	for (int nCntJoystick = 0; nCntJoystick < m_nJoyStickCont; nCntJoystick++)
+	if (m_pJoyDevice == NULL)
 	{
-		if (m_apDevice[nCntJoystick] != NULL)
+		//ジョイスティックの列挙
+		if (FAILED(m_pInput->EnumDevices(
+			DI8DEVCLASS_GAMECTRL,	//列挙したいデバイスの種類
+			DeviceFindCallBack,		//デバイスが列挙した際に実行される関数ポインタ(コールバック関数)
+			NULL,					//第二引数実行時に引数として渡されるデータのポインタ
+			DIEDFL_ATTACHEDONLY)))	//取得するデバイスを限定するかどうかのフラグ
 		{
+			return E_FAIL;
+		}
 
-			if (FAILED(hr)) {
-				MessageBox(hWnd, "Can't create Device.", "Error", MB_OK);
-				return FALSE;
+		//ジョイスティックが見つからなかった場合
+		if (!m_pJoyDevice)
+		{
+			return E_FAIL;
+		}
+
+		if (m_pJoyDevice != NULL)
+		{ // 振動なしコントローラー
+		  //データフォーマットの設定
+			if (FAILED(m_pJoyDevice->SetDataFormat(&c_dfDIJoystick)))
+			{
+				m_pJoyDevice->Release();
+				return DIENUM_STOP;
 			}
 
-			hr[nCntJoystick] = m_apDevice[nCntJoystick]->SetDataFormat(&c_dfDIJoystick);
-			if (FAILED(hr[nCntJoystick])) {
-				MessageBox(hWnd, "Can't set data format.", "Error", MB_OK);
-				return FALSE;
+			//協調モードの設定
+			if (FAILED(m_pJoyDevice->SetCooperativeLevel(hWnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE)))
+			{
+				m_pJoyDevice->Release();
+				return DIENUM_STOP;
 			}
 
-			hr[nCntJoystick] = m_apDevice[nCntJoystick]->SetCooperativeLevel(hWnd, DISCL_EXCLUSIVE | DISCL_FOREGROUND);
-			if (FAILED(hr[nCntJoystick])) {
-				MessageBox(hWnd, "Can't set cooperative level.", "Error", MB_OK);
-				return FALSE;
+			//入力範囲の設定
+			DIPROPRANGE diprg;
+			diprg.diph.dwSize = sizeof(diprg);	//ヘッダが保持している構造体のサイズ
+			diprg.diph.dwHeaderSize = sizeof(diprg.diph);	//DIPROPHEADER構造体サイズ
+			diprg.diph.dwHow = DIPH_BYOFFSET;	//オブジェクトの解釈方法
+			diprg.lMax = MAN_RANGE;	//軸の値の最大範囲
+			diprg.lMin = MIN_RANGE;	//軸の値の最小範囲
+
+			//X軸の設定
+			diprg.diph.dwObj = DIJOFS_X;
+			m_pJoyDevice->SetProperty(DIPROP_RANGE, &diprg.diph);
+
+			//Y軸の設定
+			diprg.diph.dwObj = DIJOFS_Y;
+			m_pJoyDevice->SetProperty(DIPROP_RANGE, &diprg.diph);
+
+			//Z軸の設定
+			diprg.diph.dwObj = DIJOFS_Z;
+			m_pJoyDevice->SetProperty(DIPROP_RANGE, &diprg.diph);
+
+			//RX軸の設定
+			diprg.diph.dwObj = DIJOFS_RX;
+			m_pJoyDevice->SetProperty(DIPROP_RANGE, &diprg.diph);
+
+			//RY軸の設定
+			diprg.diph.dwObj = DIJOFS_RY;
+			m_pJoyDevice->SetProperty(DIPROP_RANGE, &diprg.diph);
+
+			//RZ軸の設定
+			diprg.diph.dwObj = DIJOFS_RZ;
+			m_pJoyDevice->SetProperty(DIPROP_RANGE, &diprg.diph);
+
+			//起動準備完了
+			m_pJoyDevice->Poll();
+
+			//制御開始
+			if (m_pJoyDevice == NULL)
+			{
+				Uninit();
 			}
 
-			m_diDevCaps.dwSize = sizeof(DIDEVCAPS);
-			hr[nCntJoystick] = m_apDevice[nCntJoystick]->GetCapabilities(&m_diDevCaps);
-			if (FAILED(hr[nCntJoystick])) {
-				MessageBox(hWnd, "Can't create device capabilities.", "Error", MB_OK);
-				return FALSE;
-			}
+			m_pJoyDevice->Acquire();
 
-			hr[nCntJoystick] = m_apDevice[nCntJoystick]->EnumObjects(EnumAxesCallback, (VOID*)hWnd, DIDFT_AXIS);
-			if (FAILED(hr[nCntJoystick])) {
-				MessageBox(hWnd, "Can't set property.", "Error", MB_OK);
-				return FALSE;
-			}
-
-			hr[nCntJoystick] = m_apDevice[nCntJoystick]->Poll();
-			if (FAILED(hr[nCntJoystick])) {
-				hr[nCntJoystick] = m_apDevice[nCntJoystick]->Acquire();
-				while (hr[nCntJoystick] == DIERR_INPUTLOST) {
-					hr[nCntJoystick] = m_apDevice[nCntJoystick]->Acquire();
-				}
-			}
 		}
 	}
+	else
+	{ // 振動ありコントローラー
+	  //データフォーマットの設定
+		if (FAILED(m_pJoyDevice->SetDataFormat(&c_dfDIJoystick)))
+		{
+			m_pJoyDevice->Release();
+			return DIENUM_STOP;
+		}
+
+		//協調モードの設定
+		if (FAILED(m_pJoyDevice->SetCooperativeLevel(hWnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE)))
+		{
+			m_pJoyDevice->Release();
+			return DIENUM_STOP;
+		}
+
+		// 
+		if (FAILED(m_pJoyDevice->EnumObjects(EnumAxesCallback, (VOID*)&m_dwNumForceFeedbackAxis[0], DIDFT_AXIS)))
+		{
+			m_pJoyDevice->Release();
+			return DIENUM_STOP;
+		}
+		if (FAILED(m_pJoyDevice->EnumObjects(EnumAxesCallback, (VOID*)&m_dwNumForceFeedbackAxis[1], DIDFT_AXIS)))
+		{
+			m_pJoyDevice->Release();
+			return DIENUM_STOP;
+		}
+
+		// 振動エフェクトの生成
+		CreateEffect();
+	}
+
 	return S_OK;
 }
 
-//=====================================================
-// 終了処理
-//=====================================================
+//=============================================================================
+//ジョイスティッククラスの終了処理
+//=============================================================================
 void CInputJoypad::Uninit(void)
 {
-	// 入力デバイス(キーボード)の開放
-	for (int nCnt = 0; nCnt < MAX_JOYSTICK_NUM; nCnt++)
+	// 振動エフェクト
+	for (int nCnt = 0; nCnt < JOYPAD_EFFECT_NUM; nCnt++)
 	{
-		if (m_apDevice[nCnt] != NULL)
+		if (m_lpDIEffect[nCnt] != NULL)
 		{
-			// キーボードへのアクセス権を開放(入力制御終了)
-			m_apDevice[nCnt]->Unacquire();
-			m_apDevice[nCnt]->Release();
-			m_apDevice[nCnt] = NULL;
+			m_lpDIEffect[nCnt]->Release();
+			m_lpDIEffect[nCnt] = NULL;
 		}
 	}
+
+	//デバイス制御の停止
+	if (m_pJoyDevice != NULL)
+	{
+		m_pJoyDevice->Unacquire();
+		m_pJoyDevice->Release();
+		m_pJoyDevice = NULL;
+	}
+
 	CInput::Uninit();
 }
 
-//=====================================================
-// 更新処理
-//=====================================================
+//=============================================================================
+//ジョイスティッククラスの更新処理
+//=============================================================================
 void CInputJoypad::Update(void)
 {
-	int nCntKey;
 	DIJOYSTATE js;
-	HRESULT hr;
+	SecureZeroMemory(&js, sizeof(js));
 
-	for (int nCnt = 0; nCnt < m_nJoyStickCont; nCnt++)
+	if (m_pJoyDevice != NULL)
 	{
-		if (m_apDevice[nCnt] != NULL)
+		//1フレーム前の情報を保存
+		m_JoyState.Old.rgdwPOV[0] = m_JoyState.Press.rgdwPOV[0];
+
+		m_pJoyDevice->Poll();
+
+		if (SUCCEEDED(m_pJoyDevice->GetDeviceState(sizeof(DIJOYSTATE), &js)))
 		{
-			//１フレーム前の状態を保存
-			m_JoyPadState[nCnt].Old.rgdwPOV[0] = m_JoyPadState[nCnt].Press.rgdwPOV[0];
+			//十字キーの情報を保存
+			m_JoyState.Press.rgdwPOV[0] = js.rgdwPOV[0];
 
-			m_apDevice[nCnt]->Poll();
-
-			hr = m_apDevice[nCnt]->GetDeviceState(sizeof(DIJOYSTATE), &js);
-
-			//デバイスからデータを取得
-			if (SUCCEEDED(hr))
+			//ボタン情報
+			for (int nCntButton = 0; nCntButton < JOY_BUTTON_MAX; nCntButton++)
 			{
-				//十字キーの情報を保存
-				m_JoyPadState[nCnt].Press.rgdwPOV[0] = js.rgdwPOV[0];
+				//トリガー情報を保存
+				m_JoyState.Trigger.rgbButtons[nCntButton] = (m_JoyState.Press.rgbButtons[nCntButton] ^ js.rgbButtons[nCntButton])&js.rgbButtons[nCntButton];
 
-				for (nCntKey = 0; nCntKey < NUM_JOY_MAX; nCntKey++)
-				{
-					//キートリガー
-					m_aJoyStateTrigger[nCntKey][nCnt] = (m_aJoyState[nCntKey][nCnt] ^ js.rgbButtons[nCntKey]) &  js.rgbButtons[nCntKey];
+				//リリース情報を保存
+				m_JoyState.Release.rgbButtons[nCntButton] = (m_JoyState.Press.rgbButtons[nCntButton] ^ js.rgbButtons[nCntButton])&~js.rgbButtons[nCntButton];
 
-					//キーリリース
-					m_aJoyStateRelease[nCntKey][nCnt] = (m_aJoyState[nCntKey][nCnt] ^ js.rgbButtons[nCntKey]) & ~js.rgbButtons[nCntKey];
-
-					//キープレス情報を保存
-					m_aJoyState[nCntKey][nCnt] = js.rgbButtons[nCntKey];
-				}
+				//プレス保存
+				m_JoyState.Press.rgbButtons[nCntButton] = js.rgbButtons[nCntButton];
 			}
-			else
-			{
-				m_apDevice[nCnt]->Acquire();
-			}
+		}
+		else
+		{
+			//失敗した場合再度接続を試みる
+			m_pJoyDevice->Acquire();
 		}
 	}
 }
 
-//=====================================================
-// プレス情報の取得
-//=====================================================
-bool CInputJoypad::GetJoystickPress(int nKey, int nId)
+//=============================================================================
+//ジョイスティッククラスのプレス情報の取得
+//=============================================================================
+bool CInputJoypad::GetJoyStickPress(int nButton)
 {
-	return m_aJoyState[nKey][nId] & 0x80 ? true : false;
-}
-
-//=====================================================
-// トリガー情報の取得
-//=====================================================
-bool CInputJoypad::GetJoystickTrigger(int nKey, int nId)
-{
-	return m_aJoyStateTrigger[nKey][nId] & 0x80 ? true : false;
-}
-
-//=====================================================
-// リリース情報の取得
-//=====================================================
-bool CInputJoypad::GetJoystickRelease(int nKey, int nId)
-{
-	return m_aJoyStateRelease[nKey][nId] & 0x80 ? true : false;
+	return (m_JoyState.Press.rgbButtons[nButton] & 0x80) ? true : false;
 }
 
 //=============================================================================
-//十字キーが押された瞬間の判定処理
+//ジョイスティッククラスのトリガー情報の取得
 //=============================================================================
-bool CInputJoypad::GetPushCross(int nButton, int nId)
+bool CInputJoypad::GetJoyStickTrigger(int nButton)
+{
+	return (m_JoyState.Trigger.rgbButtons[nButton] & 0x80) ? true : false;
+}
+
+//=============================================================================
+//ジョイスティッククラスのリリース情報の取得
+//=============================================================================
+bool CInputJoypad::GetJoyStickReleas(int nButton)
+{
+	return (m_JoyState.Release.rgbButtons[nButton] & 0x80) ? true : false;
+}
+
+//=============================================================================
+//ジョイスティッククラスの十字キーが押された瞬間の判定処理
+//=============================================================================
+bool CInputJoypad::GetPushCross(int nButton)
 {
 	//前回が何も押されていないかつ、現在が押されていたら
-	if (m_JoyPadState[nId].Old.rgdwPOV[0] == 0xFFFFFFFF && 
-		m_JoyPadState[nId].Press.rgdwPOV[0] == nButton)
+	if (m_JoyState.Old.rgdwPOV[0] == 0xFFFFFFFF &&
+		m_JoyState.Press.rgdwPOV[0] == nButton)
 	{
 		return true;
 	}
-
 	return false;
 }
 
 //=============================================================================
-//十字キーが離された瞬間の判定処理
+//ジョイスティッククラスの十字キーが離した瞬間の判定処理
 //=============================================================================
-bool CInputJoypad::GetPushRelease(int nButton, int nId)
+bool CInputJoypad::GetPushRelease(int nButtond)
 {
 	//前回が押されているかつ、現在が押されていない
-	if (m_JoyPadState[nId].Old.rgdwPOV[0] == nButton &&
-		m_JoyPadState[nId].Press.rgdwPOV[0] == 0xFFFFFFFF)
+	if (m_JoyState.Old.rgdwPOV[0] == nButtond &&
+		m_JoyState.Press.rgdwPOV[0] == 0xFFFFFFFF)
 	{
 		return true;
 	}
 	return false;
 }
 
-LPDIRECTINPUTDEVICE8 CInputJoypad::GetController(int nNumber)
+//=============================================================================
+// 振動のセット
+//=============================================================================
+void CInputJoypad::SetVibration(int nNum)
 {
-	return m_apDevice[nNumber];
+	if (m_lpDIEffect[nNum] != NULL)
+	{
+		m_lpDIEffect[nNum]->Start(1, 0);
+	}
 }
 
-//=====================================================
-// デバイスの生成
-//=====================================================
-BOOL CInputJoypad::EnumJoysticksCallback(const DIDEVICEINSTANCE * pdidInstance, VOID * pContext)
+//=============================================================================
+//ジョイスティッククラスのスティック情報の取得
+//=============================================================================
+DIJOYSTATE CInputJoypad::GetStick(void)
 {
-	HRESULT hr;
+	DIJOYSTATE js;
+	SecureZeroMemory(&js, sizeof(js));
 
-	hr = m_pInput->CreateDevice(pdidInstance->guidInstance, &m_apDevice[m_nJoyStickCont], NULL);
+	if (m_pJoyDevice != NULL)
+	{
+		m_pJoyDevice->Poll();
+		m_pJoyDevice->GetDeviceState(sizeof(DIJOYSTATE), &js);
 
-	m_nJoyStickCont++;
+	}
 
-	if (FAILED(hr))
+	return js;
+}
+
+
+//=============================================================================
+//ジョイスティッククラスのデバイス列挙コールバック関数
+//=============================================================================
+BOOL CALLBACK CInputJoypad::DeviceFindCallBack(const DIDEVICEINSTANCE * pdidInstance, VOID * pContext)
+{
+	//ジョイスティックの作成
+	if (FAILED(m_pInput->CreateDevice(
+		pdidInstance->guidInstance,
+		&m_pJoyDevice,
+		NULL)))
 	{
 		return DIENUM_CONTINUE;
 	}
 
-	return DIENUM_CONTINUE;
+	//検索を終了する
+	return DIENUM_STOP;
 }
 
-//=====================================================
-// コントローラー情報の設定
-//=====================================================
+//=============================================================================
+// 　軸列挙コールバック関数
+//=============================================================================
 BOOL CInputJoypad::EnumAxesCallback(const DIDEVICEOBJECTINSTANCE * pdidoi, VOID * pContext)
 {
 	HRESULT     hr;
@@ -253,43 +346,79 @@ BOOL CInputJoypad::EnumAxesCallback(const DIDEVICEOBJECTINSTANCE * pdidoi, VOID 
 	diprg.diph.dwObj = pdidoi->dwType;
 	diprg.lMin = 0 - 1000;
 	diprg.lMax = 0 + 1000;
+	hr = m_pJoyDevice->SetProperty(DIPROP_RANGE, &diprg.diph);
 
-	for (int nCnt = 0; nCnt < m_nJoyStickCont; nCnt++)
-	{
-		hr = m_apDevice[nCnt]->SetProperty(DIPROP_RANGE, &diprg.diph);
-	}
+	if (FAILED(hr)) return DIENUM_STOP;
 
-
-	if (FAILED(hr))
-	{
-		return DIENUM_CONTINUE;
-	}
+	DWORD *pdwNumForceFeedbackAxis = (DWORD*)pContext;
+	if ((pdidoi->dwFlags & DIDOI_FFACTUATOR) != 0) (*pdwNumForceFeedbackAxis)++;
 
 	return DIENUM_CONTINUE;
 }
 
-DIJOYSTATE CInputJoypad::GetStick(const int nID)
+//=============================================================================
+// 振動エフェクトの生成
+//=============================================================================
+void CInputJoypad::CreateEffect(void)
 {
-	DIJOYSTATE js = {};
+	DWORD rgdwAxes[2] = { DIJOFS_X , DIJOFS_Y };
+	LONG  rglDirection[2] = { 1 , 1 };
 
-	if (m_apDevice[nID] != NULL)
-	{
-		m_apDevice[nID]->Poll();
-		m_apDevice[nID]->GetDeviceState(sizeof(DIJOYSTATE), &js);
-	}
-	return js;
+	DICONSTANTFORCE cf;
+	DIEFFECT        eff;
 
+	// 振動強さの調整
+	DIENVELOPE lpEnvelope;
+	lpEnvelope.dwSize = sizeof(DIENVELOPE);
+	lpEnvelope.dwAttackLevel = 10;
+	lpEnvelope.dwAttackTime = (DWORD)(0.01f * DI_SECONDS);
+	lpEnvelope.dwFadeLevel = 10;
+	lpEnvelope.dwFadeTime = (DWORD)(0.0f* DI_SECONDS);
+
+	ZeroMemory(&eff, sizeof(eff));
+	eff.dwSize = sizeof(DIEFFECT);
+	eff.dwFlags = DIEFF_CARTESIAN | DIEFF_OBJECTOFFSETS;
+	eff.dwDuration = (DWORD)(0.5f * DI_SECONDS);
+	eff.dwSamplePeriod = 0;
+	eff.dwGain = DI_FFNOMINALMAX;
+	eff.dwTriggerButton = DIEB_NOTRIGGER;
+	eff.dwTriggerRepeatInterval = 0;
+	eff.cAxes = m_dwNumForceFeedbackAxis[0];
+	eff.rgdwAxes = rgdwAxes;
+	eff.rglDirection = rglDirection;
+	eff.lpEnvelope = 0;
+	eff.cbTypeSpecificParams = sizeof(DICONSTANTFORCE);
+	eff.lpvTypeSpecificParams = &cf;
+	eff.dwStartDelay = 0;
+
+	m_pJoyDevice->CreateEffect(GUID_ConstantForce, &eff, &m_lpDIEffect[0], NULL);
+
+	// 振動強さの調整
+	lpEnvelope.dwAttackLevel = 0;
+	lpEnvelope.dwAttackTime = (DWORD)(0.01f * DI_SECONDS);
+	lpEnvelope.dwFadeLevel = 10;
+	lpEnvelope.dwFadeTime = (DWORD)(0.0f* DI_SECONDS);
+
+
+	ZeroMemory(&eff, sizeof(eff));
+	eff.dwSize = sizeof(DIEFFECT);
+	eff.dwFlags = DIEFF_CARTESIAN | DIEFF_OBJECTOFFSETS;
+	eff.dwDuration = (DWORD)(0.15f * DI_SECONDS);
+	eff.dwSamplePeriod = 0;
+	eff.dwGain = 1;
+	eff.dwTriggerButton = DIEB_NOTRIGGER;
+	eff.dwTriggerRepeatInterval = 0;
+	eff.cAxes = m_dwNumForceFeedbackAxis[1];
+	eff.rgdwAxes = rgdwAxes;
+	eff.rglDirection = rglDirection;
+	eff.lpEnvelope = &lpEnvelope;
+	eff.cbTypeSpecificParams = sizeof(DICONSTANTFORCE);
+	eff.lpvTypeSpecificParams = &cf;
+	eff.dwStartDelay = 0;
+
+	m_pJoyDevice->CreateEffect(GUID_ConstantForce, &eff, &m_lpDIEffect[1], NULL);
+	int n = 0;
 }
 
-DIJOYSTATE2 CInputJoypad::GetStick2(const int nID)
-{
-	DIJOYSTATE2 js = {};
 
-	if (m_apDevice[nID] != NULL)
-	{
-		m_apDevice[nID]->Poll();
-		m_apDevice[nID]->GetDeviceState(sizeof(DIJOYSTATE2), &js);
-	}
-	return js;
 
-}

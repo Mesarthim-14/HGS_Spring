@@ -202,7 +202,7 @@ void CPlayer3d::Move(void)
 {
 	// ローカル変数
 	CInputKeyboard *pKeyboard = CManager::GetKeyboard();					// キーボード更新
-	DIJOYSTATE js = CInputJoypad::GetStick(0);								// ジョイパッドの取得
+	DIJOYSTATE js = CManager::GetJoypad()->GetStick();						// ジョイパッドの取得
 	CSound *pSound = CManager::GetResourceManager()->GetSoundClass();		// サウンドのポインタ
 	float fAngle = CGame::GetCamera()->Getφ();								// カメラの角度
 	D3DXVECTOR3 pos = GetPos();												// 座標

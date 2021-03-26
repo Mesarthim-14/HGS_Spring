@@ -197,9 +197,12 @@ void CPlayer2d::Move(void)
 {
 	// ローカル変数
 	CInputKeyboard *pKeyboard = CManager::GetKeyboard();					// キーボード更新
-	DIJOYSTATE js = CInputJoypad::GetStick(0);								// ジョイパッドの取得
+	DIJOYSTATE js = CManager::GetJoypad()->GetStick();						// ジョイパッドの取得
 	float fSpeed = GetSpeed();												// スピード
-
+	if (CManager::GetJoypad()->GetJoyStickTrigger(0))
+	{
+		CManager::GetJoypad()->SetVibration(0);
+	}
 	//入力が存在する
 	if ((js.lX != 0.0f || js.lY != 0.0f))
 	{
