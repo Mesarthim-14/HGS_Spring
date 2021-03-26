@@ -98,7 +98,7 @@ void CTutorial::Update(void)
 	CFade::FADE_MODE mode = CManager::GetFade()->GetFade();
 
 	// ƒRƒ“ƒgƒ[ƒ‰‚Ìstart‚ð‰Ÿ‚µ‚½‚Æ‚«
-	if (CManager::GetJoypad()->GetJoystickTrigger(CInputJoypad::JOY_BUTTON_START, 0) && mode == CFade::FADE_MODE_NONE)
+	if (CManager::GetJoypad()->GetJoyStickTrigger(CInputJoypad::JOY_BUTTON_START) && mode == CFade::FADE_MODE_NONE)
 	{
 		CFade *pFade = CManager::GetFade();
 		pFade->SetFade(CManager::MODE_TYPE_GAME);
