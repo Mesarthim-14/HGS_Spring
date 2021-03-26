@@ -50,7 +50,7 @@ CPerfect * CPerfect::Create(void)
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-CPerfect::CPerfect() :CScene(PRIORITY_UI)
+CPerfect::CPerfect()
 {
 	// 0クリア
 	memset(m_pPerfect, 0, sizeof(m_pPerfect));
