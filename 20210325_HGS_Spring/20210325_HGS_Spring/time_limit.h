@@ -11,7 +11,7 @@
 // インクルード
 //=============================================================================
 #include "main.h"
-
+#include "evaluation_ui.h"
 //=============================================================================
 // 前方宣言
 //=============================================================================
@@ -23,14 +23,6 @@ class CGauge;
 class CTimeLimit
 {
 public:
-	// スコアタイプ列挙
-	typedef enum
-	{
-		EVALUATION_TYPE_NICE = 0,
-		EVALUATION_TYPE_GREAT,
-		EVALUATION_TYPE_PARFECT,
-		EVALUATION_TYPE_MAX
-	}EVALUATION_TYPE;
 
 	CTimeLimit();			// コンストラクタ
 	~CTimeLimit();												// デストラクタ
@@ -42,7 +34,7 @@ public:
 	bool Update(void);				// 更新処理*返り値*制限時間いないか
 	void Draw(void);				// 描画処理
 	
-	EVALUATION_TYPE CheckEvaluation(void); // 評価のチェック
+	CEvaluation::EVALUATION_TYPE CheckEvaluation(void); // 評価のチェック
 private:
 	float m_fTime;     // 時間
 	float m_fMaxTime;  // 最大時間

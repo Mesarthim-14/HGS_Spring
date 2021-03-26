@@ -21,6 +21,9 @@
 #include "resource_manager.h"
 #include "map_manager.h"
 #include "scroll_polygon.h"
+#include "particle.h"
+#include "time_limit.h"
+#include "score.h"
 
 //=============================================================================
 // マクロ定義
@@ -37,17 +40,25 @@ CPlayer2d * CPlayer2d::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size)
 {
 	// 初期化処理
 	CPlayer2d *pPlayer = new CPlayer2d;
-	CTexture *pTexture = GET_TEXTURE_PTR;
 
 	// !nullcheck
 	if (pPlayer != nullptr)
 	{
 		// 座標
 		pPlayer->SetSceneInfo(pos, size);
-		pPlayer->BindTexture(pTexture->GetTexture(CTexture::TEXTURE_NUM_PLAYER_2D));
 
 		// 初期化処理
 		pPlayer->Init();
+
+		// テクスチャの設定
+		CTexture *pTexture = GET_TEXTURE_PTR;
+		pPlayer->BindTexture(pTexture->GetSeparateTexture(CTexture::SEPARATE_TEX_PLAYER_NEUTRAL));
+		D3DXVECTOR2 TexInfo = pTexture->GetSparateTexInfo(CTexture::SEPARATE_TEX_PLAYER_NEUTRAL);
+		bool bLoop = pTexture->GetSparateTexLoop(CTexture::SEPARATE_TEX_PLAYER_NEUTRAL);
+
+		// アニメーションの設定
+		pPlayer->InitAnimation((int)TexInfo.x, (int)TexInfo.y, bLoop);
+
 	}
 
 	return pPlayer;
@@ -56,9 +67,11 @@ CPlayer2d * CPlayer2d::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size)
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-CPlayer2d::CPlayer2d(PRIORITY Priority)
+CPlayer2d::CPlayer2d(PRIORITY Priority) : CCharacter2d(Priority)
 {
 	m_pScrollPolygon.clear();
+	m_pTimeLimit = NULL;
+	m_bDeath = false;
 }
 
 //=============================================================================
@@ -76,7 +89,8 @@ HRESULT CPlayer2d::Init(void)
 	CCharacter2d::Init();												// 座標　角度
 	SetRadius(PLAYER_RADIUS);											// 半径の設定
 	SetSpeed(PLAYER_SPEED);												// 速度の設定
-
+	m_pTimeLimit = CTimeLimit::Create(300); // 制限時間の生成
+	m_bDeath = false;// 死亡フラグ
 	return S_OK;
 }
 
@@ -104,6 +118,12 @@ void CPlayer2d::Update(void)
 	// プレイヤーの制御
 	PlayerControl();
 
+	// 死亡チェック
+	if (m_bDeath)
+	{// リザルトに遷移処理
+
+	}
+
 	// 親クラスの更新処理
 	CCharacter2d::Update();
 }
@@ -129,11 +149,27 @@ void CPlayer2d::UpdateState(void)
 //=============================================================================
 void CPlayer2d::PlayerControl()
 {
+	Move();
+
 	// サイズが空じゃなかったら
 	if (m_pScrollPolygon.size() != 0)
 	{
 		if (m_pScrollPolygon.at(0)->GetStop() == true)
 		{
+			// 制限時間クラスの更新
+			if (!m_pTimeLimit->Update())
+			{// 制限時間を過ぎたとき
+				if (m_bDeath == false)
+				{// 死亡フラグがfalseの時
+
+				 // フラグをtrueに
+					m_bDeath = true;
+					// パーティクル生成
+					CParticlre::CreateDeath(D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), CParticlre::DEATH_PART_TYPE_ALL);
+				}
+
+			}
+
 			// 入力の種類
 			INPUT_TYPE InputType = INPUT_TYPE_NONE;
 
@@ -146,6 +182,12 @@ void CPlayer2d::PlayerControl()
 				// 入力判定
 				if (InputJudg(InputType) == true)
 				{
+					// スコア加算
+					CScore::GetScorePointa()->AddScore(m_pTimeLimit->CheckEvaluation());
+					
+					// テクスチャの変更
+					ChangeTexture(InputType);
+
 					// スクロールポリゴン情報の破棄
 					m_pScrollPolygon.pop_back();
 
@@ -156,8 +198,31 @@ void CPlayer2d::PlayerControl()
 				}
 				else
 				{// 衝突の判定
+					//if (m_bDeath == false)
+					{// 死亡フラグがfalseの時
+						
+						// フラグをtrueに
+						m_bDeath = true;
 
+						// パーティクル生成
+						if      (InputType == INPUT_TYPE_UP)    CParticlre::CreateDeath(D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), CParticlre::DEATH_PART_TYPE_UP);
+						else if (InputType == INPUT_TYPE_DOWN)  CParticlre::CreateDeath(D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), CParticlre::DEATH_PART_TYPE_DOWN);
+						else if (InputType == INPUT_TYPE_LEFT)  CParticlre::CreateDeath(D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), CParticlre::DEATH_PART_TYPE_LEFT);
+						else if (InputType == INPUT_TYPE_RIGHT) CParticlre::CreateDeath(D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), CParticlre::DEATH_PART_TYPE_RIGHT);
+					}
 				}
+
+				// スクロールポリゴン情報の破棄
+				m_pScrollPolygon.pop_back();
+
+				CMapManager *pMapManager = CGame::GetMapManager();
+
+				// 次のマップ生成
+				pMapManager->CreateMap(InputType);
+
+				m_pTimeLimit->Uninit();
+				m_pTimeLimit = NULL;
+				m_pTimeLimit = CTimeLimit::Create(300); // 制限時間の生成
 			}
 		}
 	}
@@ -272,5 +337,36 @@ void CPlayer2d::SetScrollPolygon(CScrollPolygon * pScrollPolygon)
 	{
 		// スクロールポリゴンの設定
 		m_pScrollPolygon.push_back(pScrollPolygon);
+	}
+}
+
+//=============================================================================
+// テクスチャの変更
+//=============================================================================
+void CPlayer2d::ChangeTexture(INPUT_TYPE InputType)
+{
+	// ポインタ取得
+	CTexture *pTexture = GET_TEXTURE_PTR;
+
+	// 判定
+	switch (InputType)
+	{
+	case INPUT_TYPE_UP:
+		// テクスチャの設定
+		BindTexture(pTexture->GetSeparateTexture(CTexture::SEPARATE_TEX_PLAYER_UP));
+		break;
+
+	case INPUT_TYPE_DOWN:
+		// テクスチャの設定
+		BindTexture(pTexture->GetSeparateTexture(CTexture::SEPARATE_TEX_PLAYER_DOWN));
+		break;
+	case INPUT_TYPE_RIGHT:
+		// テクスチャの設定
+		BindTexture(pTexture->GetSeparateTexture(CTexture::SEPARATE_TEX_PLAYER_RIGHT));
+		break;
+	case INPUT_TYPE_LEFT:
+		// テクスチャの設定
+		BindTexture(pTexture->GetSeparateTexture(CTexture::SEPARATE_TEX_PLAYER_LEFT));
+		break;
 	}
 }

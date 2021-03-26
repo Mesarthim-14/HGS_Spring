@@ -1,111 +1,148 @@
 //=============================================================================
 //
-// プレイヤー2dクラス [player2d.cpp]
-// Author : Konishi Yuuto
+// 評価UIクラス処理  [evaluation_ui.cpp]
+// Author : Masuzawa Mirai
 //
 //=============================================================================
 
 //=============================================================================
 // インクルード
 //=============================================================================
-#include "time_limit.h"
-#include "gauge.h"
+#include "evaluation_ui.h"
+#include "manager.h"
+#include "renderer.h"
+#include "texture.h"
+#include "resource_manager.h"
+#include "texture.h"
+#include "resource_manager.h"
 
 //=============================================================================
 // マクロ定義
 //=============================================================================
-#define GAUGE_WIDGHT 800.0f
-#define GAUGE_HEIGHT 15.0f
-//#define GAUGE_COLOR D3DXCOLOR(1.0f,1.0f,1.0f,1.0f)
-#define GAUGE_COLOR D3DXCOLOR(1.0f,1.0f,0.0f,1.0f)
-#define GAUGE_LEFT_POS D3DXVECTOR3((SCREEN_WIDTH/2) - GAUGE_WIDGHT / 2 ,200.0f,0.0f)
+#define POS  D3DXVECTOR3(200.0f, 200.0f, 0.0f) // 座標
+#define SIZE D3DXVECTOR3(120.0f,40.0f,0.0f) // サイズ*画像サイズに合わせる
+#define ROT D3DXToRadian(170)
+#define MINUS_ALPHA 0.02f
 
 //=============================================================================
 // クリエイト
 //=============================================================================
-CTimeLimit * CTimeLimit::Create(float fTime)
+CEvaluation * CEvaluation::Create(void)
 {
 	// 初期化処理
-	CTimeLimit *pTimeLimit = new CTimeLimit;
+	CEvaluation *pParticlre = new CEvaluation;
 
-	pTimeLimit->m_fTime = fTime;
-	pTimeLimit->m_fMaxTime = fTime;
-	pTimeLimit->Init();
-	return pTimeLimit;
+	// !nullcheck
+	if (pParticlre != nullptr)
+	{
+		// 座標
+		pParticlre->SetSceneInfo(POS, SIZE);
+
+
+		// 初期化処理
+		pParticlre->Init();
+	}
+
+	return pParticlre;
 }
 
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-CTimeLimit::CTimeLimit()
+CEvaluation::CEvaluation(PRIORITY Priority) :CScene2D(Priority)
 {
-	m_fTime = 0.0f;
-	m_fMaxTime = 0.0f;
-	m_pGauge = NULL;
+	m_fAlpha = 0.0f;
 }
 
 //=============================================================================
 // デストラクタ
 //=============================================================================
-CTimeLimit::~CTimeLimit()
+CEvaluation::~CEvaluation()
 {
 }
 
 //=============================================================================
 // 初期化処理
 //=============================================================================
-HRESULT CTimeLimit::Init(void)
+HRESULT CEvaluation::Init(void)
 {
-	m_pGauge = CGauge::Create(&m_fTime, GAUGE_LEFT_POS, GAUGE_WIDGHT, GAUGE_HEIGHT, (int)m_fTime, GAUGE_COLOR);
+	// 初期化処理
+	CScene2D::Init();
+	m_fAlpha = 0.0f;
+
+	D3DXCOLOR col = GetColor();
+	col.a = m_fAlpha;
+	SetCol(col);
+
+	SetRotation(ROT);
 	return S_OK;
 }
 
 //=============================================================================
 // 終了処理
 //=============================================================================
-void CTimeLimit::Uninit(void)
+void CEvaluation::Uninit(void)
 {
+	// 終了処理
+	CScene2D::Uninit();
 }
 
 //=============================================================================
 // 更新処理
 //=============================================================================
-bool CTimeLimit::Update(void)
+void CEvaluation::Update(void)
 {
-	m_fTime--;
-	if (m_fTime <= 0.0f)
+
+	if (m_fAlpha > 0)
 	{
-		m_fTime = 0.0f;
-		return false;
+		m_fAlpha -= MINUS_ALPHA;
+		D3DXCOLOR col = GetColor();
+		col.a = m_fAlpha;
+		SetCol(col);
 	}
-	return true;
+	
+
+	// 親クラスの更新処理
+	CScene2D::Update();
 }
 
 //=============================================================================
 // 描画処理
 //=============================================================================
-void CTimeLimit::Draw(void)
+void CEvaluation::Draw(void)
 {
-
+	// 描画処理
+	CScene2D::Draw();
 }
 
 //=============================================================================
-// 評価チェック
+// 評価のセット
 //=============================================================================
-CEvaluation::EVALUATION_TYPE CTimeLimit::CheckEvaluation(void)
+void CEvaluation::SetEvaluation(EVALUATION_TYPE type)
 {
-	// 割合の計算
-	float fEvaluatin = m_fTime / m_fMaxTime;
+	// アルファ値のセット
+	m_fAlpha = 1.5f;
 
-	if (fEvaluatin >= 0.7f)
-	{// パーフェクト
-		return CEvaluation::EVALUATION_TYPE_PARFECT;
-	}
-	else if (fEvaluatin >= 0.4f)
-	{// グレート
-		return CEvaluation::EVALUATION_TYPE_GREAT;
+
+	// テクスチャの切り替え
+	CTexture *pTexture = GET_TEXTURE_PTR;
+
+	switch (type)
+	{
+	case EVALUATION_TYPE_NICE:
+		// ナイス
+		BindTexture(pTexture->GetTexture(CTexture::TEXTURE_NUM_NICE));
+		break;
+	case EVALUATION_TYPE_GREAT:
+		// グレート
+		BindTexture(pTexture->GetTexture(CTexture::TEXTURE_NUM_GREAT));
+		break;
+	case EVALUATION_TYPE_PARFECT:
+		// パーフェクト
+		BindTexture(pTexture->GetTexture(CTexture::TEXTURE_NUM_PARFECT));
+		break;
+	default:
+		break;
 	}
 
-	// ナイス
-	return CEvaluation::EVALUATION_TYPE_NICE;
 }

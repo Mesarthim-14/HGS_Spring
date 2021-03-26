@@ -1,9 +1,9 @@
-#ifndef _SCORE_2D_H_
-#define _SCORE_2D_H_
+#ifndef _EVALUATION_H_
+#define _EVALUATION_H_
 //=============================================================================
 //
-// スコアクラス処理  [score.h]
-// Author : Konishi Yuuto
+// 評価UIクラス処理  [evaluation.h]
+// Author : Masuzawa Mirai
 //
 //=============================================================================
 
@@ -12,38 +12,35 @@
 //=============================================================================
 #include "main.h"
 #include "scene2d.h"
-#include "evaluation_ui.h"
 
 //=============================================================================
 // キャラクターのクラス
 //=============================================================================
-class CScore
+class CEvaluation : public CScene2D
 {
 public:
-	// スコア構造体
-	typedef struct
+	// スコアタイプ列挙
+	typedef enum
 	{
-		int nScore;
-		int nNumNice;    // ナイス数
-		int nNumGreat;   // グレート数
-		int nNumParfect; // パーフェクト数
-	}Score;
+		EVALUATION_TYPE_NICE = 0,
+		EVALUATION_TYPE_GREAT,
+		EVALUATION_TYPE_PARFECT,
+		EVALUATION_TYPE_MAX
+	}EVALUATION_TYPE;
 
-	CScore();	// コンストラクタ
-	virtual ~CScore();								// デストラクタ
-	static CScore * Create(void); // クラス生成
-	static void Release(void); // クラス生成
+	CEvaluation(PRIORITY Priority = PRIORITY_UI);	// コンストラクタ
+	virtual ~CEvaluation();							// デストラクタ
+
+	static CEvaluation* Create(void); // クラス生成
 
 	HRESULT Init(void);	// 初期化処理
 	void Uninit(void);	// 終了処理
 	void Update(void);	// 更新処理
 	void Draw(void);	// 描画処理
 
-	void AddScore(CEvaluation::EVALUATION_TYPE type);
-
-	static CScore *GetScorePointa(void) { return m_pScore; }
+	void SetEvaluation(EVALUATION_TYPE type);
 private:
-	static CScore * m_pScore;
-	Score m_score; // スコア構造体
+
+	float m_fAlpha; //アルファ値
 };
 #endif

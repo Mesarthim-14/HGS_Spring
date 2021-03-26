@@ -11,6 +11,8 @@
 #include "score.h"
 #include "renderer.h"
 #include "manager.h"
+#include "game.h"
+#include "evaluation_ui.h"
 
 //=============================================================================
 // マクロ定義
@@ -110,26 +112,31 @@ void CScore::Draw(void)
 //=============================================================================
 // スコア加算
 //=============================================================================
-void CScore::AddScore(SCORE_TYPE type)
+void CScore::AddScore(CEvaluation::EVALUATION_TYPE type)
 {
 	// スコア加算
 	m_score.nScore++;
-	
+
 	// 各値の加算
 	switch (type)
 	{
-	case SCORE_TYPE_NICE:
+	case CEvaluation::EVALUATION_TYPE_NICE:
 		m_score.nNumNice++;
 		break;
 
-	case SCORE_TYPE_GREAT:
+	case CEvaluation::EVALUATION_TYPE_GREAT:
 		m_score.nNumGreat++;
 		break;
 
-	case SCORE_TYPE_PARFECT:
+	case CEvaluation::EVALUATION_TYPE_PARFECT:
 		m_score.nNumParfect++;
 		break;
 	default:
 		break;
+	}
+
+	if (CGame::GetEvaluation() != NULL)
+	{
+		CGame::GetEvaluation()->SetEvaluation(type);
 	}
 }

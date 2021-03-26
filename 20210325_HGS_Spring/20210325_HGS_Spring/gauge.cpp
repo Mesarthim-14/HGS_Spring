@@ -30,7 +30,7 @@ LPDIRECT3DTEXTURE9 CGauge::m_pTexture = NULL;
 //==================================
 // コンストラクタ
 //==================================
-CGauge::CGauge() :CScene(PRIORITY_UI)
+CGauge::CGauge() :CScene(PRIORITY_GAUGE)
 {
 	// 変数のクリア
 	memset(m_apPolygon, 0, sizeof(m_apPolygon));
