@@ -1,6 +1,6 @@
 //=============================================================================
 //
-// ナンバー2Dクラス [number.cpp]
+// ランキングクラス [ranking.cpp]
 // Author : Konishi Yuuto
 //
 //=============================================================================
@@ -8,81 +8,95 @@
 //=============================================================================
 // インクルード
 //=============================================================================
-#include "score.h"
-#include "renderer.h"
+#include "great.h"
 #include "manager.h"
-#include "game.h"
-#include "evaluation_ui.h"
+#include "renderer.h"
+#include "number_2d.h"
+#include <stdio.h>
+#include "texture.h"
+#include "resource_manager.h"
+#include "score.h"
+
+//=============================================================================
+// マクロ定義
+//=============================================================================
+#define RANKING_INTERVAL_X	(45.0f)					// 数字の間隔
+#define RANKING_INTERVAL_Y	(83.0f)					// 数字の間隔
+
+#define MY_RANKING_INTERVAL_X	(80.0f)				// 数字の間隔
+#define MY_RANKING_INTERVAL_Y	(88.0f)				// 数字の間隔
+
+#define RANKING_FLASH_NUM	(3)						// ランキング点滅フレーム
 
 //=============================================================================
 // マクロ定義
 //=============================================================================
 
-//=============================================================================
-// 静的メンバ変数宣言
-//=============================================================================
-CScore * CScore::m_pScore = NULL;
 
 //=============================================================================
-// インスタンス生成
+// ランキング生成
 //=============================================================================
-CScore * CScore::Create(void)
+CGreat * CGreat::Create(void)
 {
-	if (m_pScore == NULL)
-	{
-		// インスタンス生成
-		m_pScore = new CScore;
+	// メモリ確保
+	CGreat *pRanking = new CGreat;
 
-		// !nullcheck
-		if (m_pScore != NULL)
-		{
-			// 初期化処理
-			m_pScore->Init();
-		}
-	}
+	// 初期化処理
+	pRanking->Init();
 
-	return m_pScore;
-}
-
-//=============================================================================
-// 削除
-//=============================================================================
-void CScore::Release(void)
-{
-	if (m_pScore != NULL)
-	{
-		m_pScore->Uninit();
-		m_pScore = NULL;
-	}
+	return pRanking;
 }
 
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-CScore::CScore()
+CGreat::CGreat()
 {
-	m_score.nScore = 0;      // スコア
-	m_score.nNumNice = 0;    // ナイス数
-	m_score.nNumGreat = 0;   // グレート数
-	m_score.nNumParfect = 0; // パーフェクト数
+	// 0クリア
+	memset(m_pGreat, 0, sizeof(m_pGreat));
+	m_nGreat = 0;
+
 }
 
 //=============================================================================
 // デストラクタ
 //=============================================================================
-CScore::~CScore()
+CGreat::~CGreat()
 {
 }
 
 //=============================================================================
 // 初期化処理
 //=============================================================================
-HRESULT CScore::Init(void)
+HRESULT CGreat::Init(void)
 {
-	m_score.nScore = 0;      // スコア
-	m_score.nNumNice = 0;    // ナイス数
-	m_score.nNumGreat = 0;   // グレート数
-	m_score.nNumParfect = 0; // パーフェクト数
+	CTexture *pTexture = GET_TEXTURE_PTR;
+
+	// スコアの取得
+	m_nGreat = CScore::GetScorePointa()->GetScoreData().nNumGreat;
+
+	for (int nCntRank = 0; nCntRank < MAX_RANKING; nCntRank++)
+	{
+		for (int nCount = 0; nCount < MAX_NUMBER; nCount++)
+		{
+			// 数字のメモリ確保
+			m_pGreat[nCount] =
+				CNumber2d::Create(D3DXVECTOR3(GREAT_POS_X - nCount*RANKING_INTERVAL_X,
+					GREAT_POS_Y + RANKING_INTERVAL_Y, 0.0f),
+					D3DXVECTOR3(RANKING_SIZE_X, RANKING_SIZE_Y, 0.0f));
+
+			if (m_pGreat[nCount] != NULL)
+			{
+				int nNum = (m_nGreat / (int)(pow(10, nCount))) % 10;
+
+				// 数字の設定
+				m_pGreat[nCount]->SetNumber(nNum);
+			}
+
+			// テクスチャの設定
+			m_pGreat[nCount]->BindTexture(pTexture->GetTexture(CTexture::TEXTURE_NUM_NUMBER_1_2D));
+		}
+	}
 
 	return S_OK;
 }
@@ -90,57 +104,41 @@ HRESULT CScore::Init(void)
 //=============================================================================
 // 終了処理
 //=============================================================================
-void CScore::Uninit(void)
+void CGreat::Uninit(void)
 {
-	delete this;
+	for (int nCount = 0; nCount < MAX_NUMBER; nCount++)
+	{
+		if (m_pGreat[nCount] != NULL)
+		{
+			// 終了処理
+			m_pGreat[nCount]->Uninit();
+			//delete m_apRanking[nCntRank][nCount];
+			m_pGreat[nCount] = NULL;
+		}
+	}
+
+	// メモリの開放処理
+	Release();
 }
 
 //=============================================================================
 // 更新処理
 //=============================================================================
-void CScore::Update(void)
+void CGreat::Update(void)
 {
 }
 
 //=============================================================================
 // 描画処理
 //=============================================================================
-void CScore::Draw(void)
+void CGreat::Draw(void)
 {
-}
-
-//=============================================================================
-// スコア加算
-//=============================================================================
-void CScore::AddScore(CEvaluation::EVALUATION_TYPE type)
-{
-	// スコア加算
-	m_score.nScore++;
-	if (m_score.nScore > 99)
+	for (int nCount = 0; nCount < MAX_NUMBER; nCount++)
 	{
-		m_score.nScore = 99;
-	}
-
-	// 各値の加算
-	switch (type)
-	{
-	case CEvaluation::EVALUATION_TYPE_NICE:
-		m_score.nNumNice++;
-		break;
-
-	case CEvaluation::EVALUATION_TYPE_GREAT:
-		m_score.nNumGreat++;
-		break;
-
-	case CEvaluation::EVALUATION_TYPE_PARFECT:
-		m_score.nNumParfect++;
-		break;
-	default:
-		break;
-	}
-
-	if (CGame::GetEvaluation() != NULL)
-	{
-		CGame::GetEvaluation()->SetEvaluation(type);
+		if (m_pGreat[nCount] != NULL)
+		{
+			// 描画処理
+			m_pGreat[nCount]->Draw();
+		}
 	}
 }

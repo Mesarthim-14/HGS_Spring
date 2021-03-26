@@ -1,0 +1,4 @@
+ドライバを入れないと振動しない場合あり
+
+*学校配布のコントローラーのドライブ(DLするだけでたぶんOK)
+https://www.elecom.co.jp/support/download/peripheral/gamepad/jcu3613m/index.html
