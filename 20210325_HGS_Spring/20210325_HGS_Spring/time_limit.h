@@ -12,6 +12,14 @@
 //=============================================================================
 #include "main.h"
 #include "evaluation_ui.h"
+
+//=============================================================================
+// マクロ定義
+//=============================================================================
+#define DEFAULT_TIME 300.0f
+#define TIME_MIN 25.0f
+#define MAX_TIME_SCORE 80
+
 //=============================================================================
 // 前方宣言
 //=============================================================================
@@ -27,13 +35,13 @@ public:
 	CTimeLimit();			// コンストラクタ
 	~CTimeLimit();												// デストラクタ
 
-	static CTimeLimit*Create(float fTime);	// クリエイト
+	static CTimeLimit*Create(void);	// クリエイト
 
 	HRESULT Init(void);				// 初期化処理
 	void Uninit(void);				// 終了処理
 	bool Update(void);				// 更新処理*返り値*制限時間いないか
 	void Draw(void);				// 描画処理
-	
+	CGauge * GetGauge(void) { return m_pGauge; }
 	CEvaluation::EVALUATION_TYPE CheckEvaluation(void); // 評価のチェック
 private:
 	float m_fTime;     // 時間

@@ -73,6 +73,10 @@ CGame* CGame::Create(void)
 //=======================================================================================
 HRESULT CGame::Init()
 {
+
+	// スコアクラスの生成
+	CScore::Create();
+
 	// nullcheck
 	if (m_pPlayer2d == nullptr)
 	{
@@ -95,9 +99,7 @@ HRESULT CGame::Init()
 
 	//サウンドの再生
 	GET_SOUND_PTR->Play(CSound::SOUND_LABEL_BGM_GAME);
-	// スコアクラスの生成
-	CScore::Create();
-
+	
 	// 評価クラス
 	m_pEvaluation = CEvaluation::Create();
 
@@ -130,8 +132,6 @@ void CGame::Uninit(void)
 
 	//オブジェクトの破棄
 	Release();
-
-	CScore::Release();
 }
 
 //=======================================================================================

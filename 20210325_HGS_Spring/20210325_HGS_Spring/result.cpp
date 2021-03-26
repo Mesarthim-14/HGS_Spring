@@ -19,6 +19,8 @@
 #include "resource_manager.h"
 #include "ranking.h"
 #include "sound.h"
+#include "score.h"
+#include "result_score.h"
 
 //=============================================================================
 //リザルトクラスのコンストラクタ
@@ -73,6 +75,9 @@ HRESULT CResult::Init(void)
 	// ランキングの生成
 	CRanking::Create();
 
+	//リザルトスコアの生成
+	CResultScore::Create();
+
 	//サウンドの再生
 	GET_SOUND_PTR->Play(CSound::SOUND_LABEL_BGM_RESULT);
 
@@ -95,6 +100,8 @@ void CResult::Uninit(void)
 
 	//オブジェクトの破棄
 	Release();
+
+	CScore::Release();
 }
 
 //=============================================================================

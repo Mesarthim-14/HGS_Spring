@@ -14,6 +14,7 @@
 #include "manager.h"
 #include "resource_manager.h"
 #include "texture.h"
+#include "order.h"
 
 //=======================================================================================
 // マクロ定義
@@ -25,6 +26,7 @@
 //=======================================================================================
 CScrollPolygon::CScrollPolygon(PRIORITY Priority) : CScene2D(Priority)
 {
+	m_pOrder = nullptr;
 	m_ScrollInfo = { DIRECTION_TYPE_NONE , false };
 	m_nCounter = 0;
 	m_move = ZeroVector3;					// 移動量
@@ -80,9 +82,33 @@ HRESULT CScrollPolygon::Init(void)
 	CTexture *pTexture = GET_TEXTURE_PTR;
 
 	// テクスチャの設定
-	BindTexture(nullptr);
+	BindTexture(pTexture->GetTexture(CTexture::TEXTURE_NUM_GAME_BG));
+
+	// nullcheck
+	if (m_pOrder == nullptr)
+	{
+		// 座標
+		m_pOrder = COrder::Create(GetPos(), m_ScrollInfo);
+	}
 
 	return S_OK;
+}
+
+//=======================================================================================
+// 終了処理
+//=======================================================================================
+void CScrollPolygon::Uninit(void)
+{
+	// 終了処理
+	CScene2D::Uninit();
+
+	// !nullcheck
+	if (m_pOrder != nullptr)
+	{
+		// オーダーの終了処理
+		m_pOrder->Uninit();
+		m_pOrder = nullptr;
+	}
 }
 
 //=======================================================================================
@@ -98,10 +124,17 @@ void CScrollPolygon::Update(void)
 	// 頂点の移動
 	UpdateVertex();
 
+	// !nullcheck
+	if (m_pOrder != nullptr)
+	{
+		// 座標の更新
+		m_pOrder->GetPos() = GetPos();
+		m_pOrder->UpdateVertex();
+	}
+
 	// 二度目の移動
 	if (m_bSecondMove == true)
 	{
-
 		// スクロールするカウンタ
 		if (m_nCounter >= SCROLL_FRAME)
 		{

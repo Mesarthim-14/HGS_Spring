@@ -169,6 +169,7 @@
     <ClInclude Include="modelanime.h" />
     <ClInclude Include="motion.h" />
     <ClInclude Include="number_2d.h" />
+    <ClInclude Include="order.h" />
     <ClInclude Include="particle.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="player2d.h" />
@@ -178,6 +179,7 @@
     <ClInclude Include="renderer.h" />
     <ClInclude Include="resource_manager.h" />
     <ClInclude Include="result.h" />
+    <ClInclude Include="result_score.h" />
     <ClInclude Include="scene.h" />
     <ClInclude Include="scene2d.h" />
     <ClInclude Include="scene3D.h" />
@@ -214,6 +216,7 @@
     <ClCompile Include="modelanime.cpp" />
     <ClCompile Include="motion.cpp" />
     <ClCompile Include="number_2d.cpp" />
+    <ClCompile Include="order.cpp" />
     <ClCompile Include="particle.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="player2d.cpp" />
@@ -223,6 +226,7 @@
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="resource_manager.cpp" />
     <ClCompile Include="result.cpp" />
+    <ClCompile Include="result_score.cpp" />
     <ClCompile Include="scene.cpp" />
     <ClCompile Include="scene2d.cpp" />
     <ClCompile Include="scene3D.cpp" />

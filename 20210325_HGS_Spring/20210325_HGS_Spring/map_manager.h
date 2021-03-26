@@ -31,11 +31,11 @@ public:
 
 	void Uninit(void);										// 終了処理
 	void Update(void);										// 更新処理
-	void CreateMap(INPUT_TYPE InputType);		// マップの生成
-	D3DXVECTOR3 SetPos(INPUT_TYPE InputType);	// 移動量の設定
-	D3DXVECTOR3 SetMove(INPUT_TYPE InputType);	// 移動量の設定
+	void CreateMap(INPUT_TYPE InputType);					// マップの生成
+	D3DXVECTOR3 SetPos(INPUT_TYPE InputType);				// 移動量の設定
+	D3DXVECTOR3 SetMove(INPUT_TYPE InputType);				// 移動量の設定
 	CScrollPolygon::SCROLL_INFO SetScrollInfo(void);		// スクロール情報
-	static CMapManager *GetInstance(void);				// インスタンス取得関数
+	static CMapManager *GetInstance(void);					// インスタンス取得関数
 	
 private:
 	CMapManager();								// コンストラクタ
