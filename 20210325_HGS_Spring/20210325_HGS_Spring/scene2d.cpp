@@ -133,6 +133,12 @@ void CScene2D::Uninit(void)
 //=======================================================================================
 void CScene2D::Update(void)
 {
+	// アニメーションパターンが設定されていたら
+	if (m_nPatternAnim != 0)
+	{
+		// アニメーションの更新
+		UpdateAnimation();
+	}
 }
 
 //=======================================================================================
@@ -372,7 +378,7 @@ void CScene2D::SetRotation(float rotasion)
 	// 回転の値を加算
 	 m_fRotasion += rotasion;
 
-	float r = sqrtf(powf(size.x , 2.0) + powf(size.x , 2.0));	//半径
+	float r = sqrtf(powf(size.x , 2.0) + powf(size.y , 2.0));	//半径
 	float fTheta = atan2(size.x , size.x );					//シータ
 
 	float XAngle = r*cos(fTheta + m_fRotasion);	//Xの角度

@@ -118,7 +118,7 @@ CParticlre * CParticlre::Create(D3DXVECTOR3 pos, D3DXVECTOR3 move , int nLife)
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-CParticlre::CParticlre(PRIORITY Priority)
+CParticlre::CParticlre(PRIORITY Priority) :CScene2D(Priority)
 {
 	m_move = ZeroVector3; // 移動量
 	m_col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);  // カラー
@@ -200,10 +200,10 @@ void CParticlre::Draw(void)
 	//デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
-	// 加算合成
-	pDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
-	pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-	pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
+	//// 加算合成
+	//pDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+	//pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	//pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
 
 	// 描画処理
 	CScene2D::Draw();
