@@ -56,6 +56,7 @@ CTexture::CTexture()
 		{ "data/Texture/Not_Left_M.png" },	// 左じゃない
 		{ "data/Texture/tutorial.png" },	//
 		{ "data/Texture/Title.png" },       // 
+		{ "data/Texture/Ranking.png" },       // 
 	}; 
 
 	// 分割テクスチャの名前の設定

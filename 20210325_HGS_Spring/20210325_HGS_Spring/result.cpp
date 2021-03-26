@@ -24,6 +24,7 @@
 #include "perfect.h"
 #include "great.h"
 #include "nice.h"
+#include "texture.h"
 
 //=============================================================================
 //リザルトクラスのコンストラクタ
@@ -71,7 +72,8 @@ HRESULT CResult::Init(void)
 
 		if (m_pScene2D != nullptr)
 		{
-			m_pScene2D->BindTexture(nullptr);
+			CTexture *pTexture = GET_TEXTURE_PTR;
+			m_pScene2D->BindTexture(pTexture->GetTexture(CTexture::TEXTURE_NUM_RANKING));
 		}
 	}
 

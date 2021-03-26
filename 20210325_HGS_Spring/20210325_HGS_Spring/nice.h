@@ -17,8 +17,8 @@
 //=============================================================================
 #define MAX_NUMBER		(2)				// ナンバーの桁数
 #define MAX_RANKING		(5)				// ランキングの数
-#define NICE_POS_X	(300.0f)		// ランキングの横の座標
-#define NICE_POS_Y	(400.0f)		// ランキングの縦の座標
+#define NICE_POS_X	(500.0f)		// ランキングの横の座標
+#define NICE_POS_Y	(650.0f)		// ランキングの縦の座標
 #define RANKING_SIZE_X	(15.0f)			// ランキングの横のサイズ
 #define RANKING_SIZE_Y	(20.0f)			// ランキングの縦のサイズ
 
