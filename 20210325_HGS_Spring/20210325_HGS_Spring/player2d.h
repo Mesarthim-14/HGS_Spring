@@ -45,6 +45,8 @@ public:
 	bool InputJudg(INPUT_TYPE InputType);					// 入力処理の判定
 	void SetScrollPolygon(CScrollPolygon *pScrollPolygon);	// スクロールポリゴンのポインタ
 	void ChangeTexture(INPUT_TYPE InputType);				// テクスチャの変更
+
+	bool GetDeath(void) { return m_bDeath; }
 private:
 	std::vector<CScrollPolygon*> m_pScrollPolygon;	// 現在のスクロール情報のポインタ
 	CTimeLimit * m_pTimeLimit;

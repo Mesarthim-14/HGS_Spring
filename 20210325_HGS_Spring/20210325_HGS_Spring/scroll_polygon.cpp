@@ -15,6 +15,8 @@
 #include "resource_manager.h"
 #include "texture.h"
 #include "order.h"
+#include "game.h"
+#include "player2d.h"
 
 //=======================================================================================
 // マクロ定義
@@ -33,6 +35,7 @@ CScrollPolygon::CScrollPolygon(PRIORITY Priority) : CScene2D(Priority)
 	m_bSecondMove = false;					// 二度目の移動
 	m_bEnd = false;
 	m_bStop = false;
+	m_nEndCounter = 0;
 }
 
 //=======================================================================================
@@ -116,44 +119,55 @@ void CScrollPolygon::Uninit(void)
 //=======================================================================================
 void CScrollPolygon::Update(void)
 {
-	m_nCounter++;
-
-	// 座標
-	GetPos() += m_move;
-
-	// 頂点の移動
-	UpdateVertex();
-
-	// !nullcheck
-	if (m_pOrder != nullptr)
+	if (CGame::GetPlayer2d()->GetDeath() == true)
 	{
-		D3DXVECTOR3 pos = GetPos();
-		// 座標の更新
-		m_pOrder->GetPos() = D3DXVECTOR3(pos.x, pos.y - 85.0f, 0.0f);
-		m_pOrder->UpdateVertex();
+		m_nEndCounter++;
 	}
 
-	// 二度目の移動
-	if (m_bSecondMove == true)
+	if (m_nEndCounter <= 10)
 	{
-		// スクロールするカウンタ
-		if (m_nCounter >= SCROLL_FRAME)
+		m_nCounter++;
+
+		// 座標
+		GetPos() += m_move;
+
+		// 頂点の移動
+		UpdateVertex();
+
+		// !nullcheck
+		if (m_pOrder != nullptr)
 		{
-			// 移動を止める
-			m_bEnd = true;
+			D3DXVECTOR3 pos = GetPos();
+			// 座標の更新
+			m_pOrder->GetPos() = D3DXVECTOR3(pos.x, pos.y - 85.0f, 0.0f);
+			m_pOrder->UpdateVertex();
 		}
-	}
-	else
-	{
-		// スクロールするカウンタ
-		if (m_nCounter >= SCROLL_FRAME)
+
+		// 二度目の移動
+		if (m_bSecondMove == true)
 		{
-			// 移動を止める
-			m_move = ZeroVector3;
-			m_bStop = true;
+			// スクロールするカウンタ
+			if (m_nCounter >= SCROLL_FRAME)
+			{
+				// 移動を止める
+				m_bEnd = true;
+			}
 		}
+		else
+		{
+			// スクロールするカウンタ
+			if (m_nCounter >= SCROLL_FRAME)
+			{
+				// 移動を止める
+				m_move = ZeroVector3;
+				m_bStop = true;
+			}
+		}
+
+
 	}
 }
+
 
 //=======================================================================================
 // 
