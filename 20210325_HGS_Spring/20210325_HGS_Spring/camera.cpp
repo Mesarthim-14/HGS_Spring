@@ -133,8 +133,7 @@ void CCamera::NomalUpdate(D3DXVECTOR3 PlayerPos, D3DXVECTOR3 PlayerRot)
 	CInputKeyboard *pKeyInput = CManager::GetKeyboard();
 
 	// ジョイパッドの取得
-	DIJOYSTATE js = CInputJoypad::GetStick(0);
-
+	DIJOYSTATE js = CManager::GetJoypad()->GetStick();	
 	// 距離の調整
 	if (m_fDistance > DISTANCE)
 	{

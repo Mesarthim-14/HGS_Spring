@@ -42,7 +42,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -76,6 +76,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -103,6 +105,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -152,17 +155,20 @@
     <ClInclude Include="collision.h" />
     <ClInclude Include="fade.h" />
     <ClInclude Include="game.h" />
+    <ClInclude Include="gauge.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="joypad.h" />
     <ClInclude Include="keyboard.h" />
     <ClInclude Include="light.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="manager.h" />
+    <ClInclude Include="map_manager.h" />
     <ClInclude Include="mesh_3d.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="modelanime.h" />
     <ClInclude Include="motion.h" />
     <ClInclude Include="number_2d.h" />
+    <ClInclude Include="particle.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="player2d.h" />
     <ClInclude Include="player3d.h" />
@@ -175,8 +181,11 @@
     <ClInclude Include="scene2d.h" />
     <ClInclude Include="scene3D.h" />
     <ClInclude Include="scene_base.h" />
+    <ClInclude Include="scroll_polygon.h" />
+    <ClInclude Include="score.h" />
     <ClInclude Include="sound.h" />
     <ClInclude Include="texture.h" />
+    <ClInclude Include="time_limit.h" />
     <ClInclude Include="title.h" />
     <ClInclude Include="tutorial.h" />
     <ClInclude Include="xfile.h" />
@@ -190,17 +199,20 @@
     <ClCompile Include="collision.cpp" />
     <ClCompile Include="fade.cpp" />
     <ClCompile Include="game.cpp" />
+    <ClCompile Include="gauge.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="joypad.cpp" />
     <ClCompile Include="keyboard.cpp" />
     <ClCompile Include="light.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="manager.cpp" />
+    <ClCompile Include="map_manager.cpp" />
     <ClCompile Include="mesh_3d.cpp" />
     <ClCompile Include="model.cpp" />
     <ClCompile Include="modelanime.cpp" />
     <ClCompile Include="motion.cpp" />
     <ClCompile Include="number_2d.cpp" />
+    <ClCompile Include="particle.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="player2d.cpp" />
     <ClCompile Include="player3d.cpp" />
@@ -213,8 +225,11 @@
     <ClCompile Include="scene2d.cpp" />
     <ClCompile Include="scene3D.cpp" />
     <ClCompile Include="scene_base.cpp" />
+    <ClCompile Include="scroll_polygon.cpp" />
+    <ClCompile Include="score.cpp" />
     <ClCompile Include="sound.cpp" />
     <ClCompile Include="texture.cpp" />
+    <ClCompile Include="time_limit.cpp" />
     <ClCompile Include="title.cpp" />
     <ClCompile Include="tutorial.cpp" />
     <ClCompile Include="xfile.cpp" />

@@ -162,24 +162,6 @@ void CRenderer::Update(void)
 
 	// キーボード情報
 	CInputKeyboard *pKeyboard = CManager::GetKeyboard();
-	
-	// ポリゴンの表示
-	if (pKeyboard->GetPress(DIK_M))
-	{
-		LPDIRECT3DDEVICE9 pDevice = GetDevice();		// デバイスへのポインタ
-
-		switch (m_fillMode)
-		{
-		case D3DFILL_SOLID:
-			m_fillMode = D3DFILL_WIREFRAME;
-			break;
-		case D3DFILL_WIREFRAME:
-			m_fillMode = D3DFILL_SOLID;
-			break;
-		}
-
-		pDevice->SetRenderState(D3DRS_FILLMODE, m_fillMode);
-	}
 }
 
 //=============================================================================

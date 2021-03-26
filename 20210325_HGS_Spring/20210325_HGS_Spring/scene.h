@@ -27,7 +27,7 @@ public:
 		PRIORITY_1,
 		PRIORITY_CHARACTER,	// キャラクター
 		PRIORITY_EFFECT,	// エフェクト
-		PRIORITY_PARTICLE,	// エフェクト
+		PRIORITY_PARTICLE,	// パーティクル
 		PRIORITY_UI,		// UI
 		PRIORITY_MAX		// 優先順位の最大数
 	}PRIORITY;

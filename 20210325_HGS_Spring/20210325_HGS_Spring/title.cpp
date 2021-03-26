@@ -123,7 +123,7 @@ void CTitle::Update(void)
 	CSound *pSound = CManager::GetResourceManager()->GetSoundClass();
 
 	// コントローラのstartを押したときか、エンターキーを押したとき
-	if (CManager::GetJoypad()->GetJoystickTrigger(CInputJoypad::JOY_BUTTON_START, 0) && mode == CFade::FADE_MODE_NONE
+	if (CManager::GetJoypad()->GetJoyStickTrigger(CInputJoypad::JOY_BUTTON_START) && mode == CFade::FADE_MODE_NONE
 		|| pKey->GetTrigger(DIK_RETURN) && mode == CFade::FADE_MODE_NONE)
 	{
 		CFade *pFade = CManager::GetFade();

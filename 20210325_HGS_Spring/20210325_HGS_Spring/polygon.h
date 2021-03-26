@@ -29,8 +29,11 @@ public:
 	void Draw(void);															// 描画処理
 	void SetColor(const D3DXCOLOR color);										// 色の設定
 
+	void SetVertexPos(D3DXVECTOR3 pos[NUM_VERTEX]);                           // 頂点座標の設定
+	void BindTexture(LPDIRECT3DTEXTURE9 pTexture) { m_pTexture = pTexture; }  // テクスチャの割り当て
 private:
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;	// 頂点バッファへのポインタ
+	LPDIRECT3DTEXTURE9        m_pTexture;  // テクスチャへのポインタ
 	D3DXVECTOR3 m_Size;					// ポリゴンのサイズ
 	D3DXVECTOR3 m_pos;					// ライフの位置
 };

@@ -370,13 +370,13 @@ void CScene2D::SetRotation(float rotasion)
 	D3DXVECTOR3 size = GetSize();	// 座標
 
 	// 回転の値を加算
-	rotasion += m_fRotasion;
+	 m_fRotasion += rotasion;
 
-	float r = sqrtf(powf(size.x / 2, 2.0) + powf(size.x / 2, 2.0));	//半径
-	float fTheta = atan2(size.x / 2, size.x / 2);					//シータ
+	float r = sqrtf(powf(size.x , 2.0) + powf(size.x , 2.0));	//半径
+	float fTheta = atan2(size.x , size.x );					//シータ
 
-	float XAngle = r*cos(fTheta + rotasion);	//Xの角度
-	float YAngle = r*sin(fTheta + rotasion);	//Yの角度
+	float XAngle = r*cos(fTheta + m_fRotasion);	//Xの角度
+	float YAngle = r*sin(fTheta + m_fRotasion);	//Yの角度
 
 	VERTEX_2D*pVtx;	//頂点情報へのポインタ
 
@@ -384,21 +384,19 @@ void CScene2D::SetRotation(float rotasion)
 	GetVtxBuff()->Lock(0, 0, (void**)&pVtx, 0);
 
 	pVtx[0].pos = D3DXVECTOR3(pos.x + XAngle, pos.y + YAngle, 0.0f);
-	XAngle = r*cos(fTheta + D3DXToRadian(90) + rotasion);
-	YAngle = r*sin(fTheta + D3DXToRadian(90) + rotasion);
+	XAngle = r*cos(fTheta + D3DXToRadian(90) + m_fRotasion);
+	YAngle = r*sin(fTheta + D3DXToRadian(90) + m_fRotasion);
 	pVtx[1].pos = D3DXVECTOR3(pos.x + XAngle, pos.y + YAngle, 0.0f);
-	XAngle = r*cos(fTheta + D3DXToRadian(-90) + rotasion);
-	YAngle = r*sin(fTheta + D3DXToRadian(-90) + rotasion);
+	XAngle = r*cos(fTheta + D3DXToRadian(-90) + m_fRotasion);
+	YAngle = r*sin(fTheta + D3DXToRadian(-90) + m_fRotasion);
 	pVtx[2].pos = D3DXVECTOR3(pos.x + XAngle, pos.y + YAngle, 0.0f);
-	XAngle = r*cos(fTheta + D3DXToRadian(180) + rotasion);
-	YAngle = r*sin(fTheta + D3DXToRadian(180) + rotasion);
+	XAngle = r*cos(fTheta + D3DXToRadian(180) + m_fRotasion);
+	YAngle = r*sin(fTheta + D3DXToRadian(180) + m_fRotasion);
 	pVtx[3].pos = D3DXVECTOR3(pos.x + XAngle, pos.y + YAngle, 0.0f);
 
 	//頂点データをアンロック
 	GetVtxBuff()->Unlock();
 
-	// 回転量
-	m_fRotasion += 0.01f;
 }
 
 //=============================================
