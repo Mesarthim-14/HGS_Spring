@@ -28,6 +28,7 @@ public:
 	virtual void Draw(void) = 0;															// 描画処理
 	void BindTexture(LPDIRECT3DTEXTURE9 pTexture) { m_pTexture = pTexture; }				// テクスチャの設定
 	virtual void SetColor(const D3DXCOLOR &col) { m_col = col; }				// 色
+	D3DXVECTOR3 &GetPos(void) { return m_pos; }							// 座標
 
 protected:
 	// Set関数
@@ -38,7 +39,6 @@ protected:
 	void SetSceneInfo(const D3DXVECTOR3 &pos, const D3DXVECTOR3 &size);
 
 	// Get関数
-	D3DXVECTOR3 &GetPos(void)					{ return m_pos; }							// 座標
 	D3DXVECTOR3 &GetSize(void)					{ return m_size; }							// サイズ
 	D3DXCOLOR &GetColor(void)					{ return m_col; };							// 色
 	D3DXVECTOR3 &GetRot(void)					{ return m_rot; };							// 回転量

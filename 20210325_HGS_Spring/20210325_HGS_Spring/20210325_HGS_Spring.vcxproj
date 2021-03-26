@@ -171,6 +171,7 @@
     <ClInclude Include="motion.h" />
     <ClInclude Include="nice.h" />
     <ClInclude Include="number_2d.h" />
+    <ClInclude Include="order.h" />
     <ClInclude Include="particle.h" />
     <ClInclude Include="perfect.h" />
     <ClInclude Include="player.h" />
@@ -220,6 +221,7 @@
     <ClCompile Include="motion.cpp" />
     <ClCompile Include="nice.cpp" />
     <ClCompile Include="number_2d.cpp" />
+    <ClCompile Include="order.cpp" />
     <ClCompile Include="particle.cpp" />
     <ClCompile Include="perfect.cpp" />
     <ClCompile Include="player.cpp" />

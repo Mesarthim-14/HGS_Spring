@@ -25,10 +25,37 @@ CTexture::CTexture()
 		{ "data/Texture/player.png" },
 		{ "data/Texture/number_1.png" },
 		{ "data/Texture/number_2.png" },
-		{ "data/Texture/particle001.png" },  // パーティクル
-		{ "data/Texture/Nice.png" },         // nice
-		{ "data/Texture/Great.png" },        // great
-		{ "data/Texture/Parfect.png" },      // parfect
+		{ "data/Texture/particle001.png" },	// パーティクル
+		{ "data/Texture/Nice.png" },		// nice
+		{ "data/Texture/Great.png" },		// great
+		{ "data/Texture/Parfect.png" },		// parfect
+		{ "data/Texture/game_BG.png" },		// ゲーム背景
+		{ "data/Texture/Up_E.png" },		// 上
+		{ "data/Texture/Up_J.png" },		// 上
+		{ "data/Texture/Up_M.png" },		// 上
+		{ "data/Texture/Down_E.png" },		// 下
+		{ "data/Texture/Down_J.png" },		// 下
+		{ "data/Texture/Down_M.png" },		// 下
+		{ "data/Texture/Right_E.png" },		// 右
+		{ "data/Texture/Right_J.png" },		// 右
+		{ "data/Texture/Right_M.png" },		// 右
+		{ "data/Texture/Left_E.png" },		// 左
+		{ "data/Texture/Left_J.png" },		// 左
+		{ "data/Texture/Left_M.png" },		// 左
+		{ "data/Texture/Not_Up_E.png" },	// 上じゃない
+		{ "data/Texture/Not_Up_J.png" },	// 上じゃない
+		{ "data/Texture/Not_Up_M.png" },	// 上じゃない
+		{ "data/Texture/Not_Down_E.png" },	// 下じゃない
+		{ "data/Texture/Not_Down_J.png" },	// 下じゃない
+		{ "data/Texture/Not_Down_M.png" },	// 下じゃない
+		{ "data/Texture/Not_Right_E.png" },	// 右じゃない
+		{ "data/Texture/Not_Right_J.png" },	// 右じゃない
+		{ "data/Texture/Not_Right_M.png" },	// 右じゃない
+		{ "data/Texture/Not_Left_E.png" },	// 左じゃない
+		{ "data/Texture/Not_Left_J.png" },	// 左じゃない
+		{ "data/Texture/Not_Left_M.png" },	// 左じゃない
+		{ "data/Texture/tutorial.png" },	//
+		{ "data/Texture/Title.png" },       // 
 	}; 
 
 	// 分割テクスチャの名前の設定

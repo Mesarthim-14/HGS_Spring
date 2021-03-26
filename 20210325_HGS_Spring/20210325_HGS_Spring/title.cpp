@@ -73,7 +73,9 @@ HRESULT CTitle::Init()
 
 		if (m_pScene2D != nullptr)
 		{
-			m_pScene2D->BindTexture(nullptr);
+			// テクスチャ割り当て
+			CTexture *pTexture = GET_TEXTURE_PTR;
+			m_pScene2D->BindTexture(pTexture->GetTexture(CTexture::TEXTURE_NUM_TITLE));
 		}
 	}
 
@@ -127,7 +129,7 @@ void CTitle::Update(void)
 		|| pKey->GetTrigger(DIK_RETURN) && mode == CFade::FADE_MODE_NONE)
 	{
 		CFade *pFade = CManager::GetFade();
-		pFade->SetFade(CManager::MODE_TYPE_GAME);
+		pFade->SetFade(CManager::MODE_TYPE_TUTORIAL);
 
 		//サウンドの再生
 		GET_SOUND_PTR->Play(CSound::SOUND_LABEL_SE_DECISION);

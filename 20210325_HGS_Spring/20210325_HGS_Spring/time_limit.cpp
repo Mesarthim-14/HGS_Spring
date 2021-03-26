@@ -10,27 +10,30 @@
 //=============================================================================
 #include "time_limit.h"
 #include "gauge.h"
-
+#include "score.h"
 //=============================================================================
 // マクロ定義
 //=============================================================================
 #define GAUGE_WIDGHT 800.0f
-#define GAUGE_HEIGHT 15.0f
-//#define GAUGE_COLOR D3DXCOLOR(1.0f,1.0f,1.0f,1.0f)
-#define GAUGE_COLOR D3DXCOLOR(1.0f,1.0f,0.0f,1.0f)
-#define GAUGE_LEFT_POS D3DXVECTOR3((SCREEN_WIDTH/2) - GAUGE_WIDGHT / 2 ,200.0f,0.0f)
+#define GAUGE_HEIGHT 10.0f
+#define GAUGE_COLOR D3DXCOLOR(1.0f,1.0f,1.0f,1.0f)
+//#define GAUGE_COLOR D3DXCOLOR(1.0f,1.0f,0.0f,1.0f)
+#define GAUGE_LEFT_POS D3DXVECTOR3((SCREEN_WIDTH/2) - GAUGE_WIDGHT / 2 ,150.0f,0.0f)
 
 //=============================================================================
 // クリエイト
 //=============================================================================
-CTimeLimit * CTimeLimit::Create(float fTime)
+CTimeLimit * CTimeLimit::Create(void)
 {
 	// 初期化処理
 	CTimeLimit *pTimeLimit = new CTimeLimit;
 
-	pTimeLimit->m_fTime = fTime;
-	pTimeLimit->m_fMaxTime = fTime;
+	int nTimeRate = CScore::GetScorePointa()->GetScoreData().nScore;
+	if (nTimeRate > 80)nTimeRate = 80;
+	pTimeLimit->m_fTime = DEFAULT_TIME + ((25 - DEFAULT_TIME)*1/MAX_TIME_SCORE)* nTimeRate;
+	pTimeLimit->m_fMaxTime = pTimeLimit->m_fTime;
 	pTimeLimit->Init();
+
 	return pTimeLimit;
 }
 
@@ -49,6 +52,7 @@ CTimeLimit::CTimeLimit()
 //=============================================================================
 CTimeLimit::~CTimeLimit()
 {
+	
 }
 
 //=============================================================================
@@ -65,6 +69,7 @@ HRESULT CTimeLimit::Init(void)
 //=============================================================================
 void CTimeLimit::Uninit(void)
 {
+	delete this;
 }
 
 //=============================================================================

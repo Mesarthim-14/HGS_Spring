@@ -18,6 +18,7 @@
 #include "sound.h"
 #include "joypad.h"
 #include "resource_manager.h"
+#include "texture.h"
 
 //=======================================================================================
 //静的メンバ変数宣言
@@ -63,8 +64,9 @@ HRESULT CTutorial::Init(void)
 	{
 		m_pScene = CScene2D::Create(D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f));
 
-		//テクスチャの設定
-		m_pScene->BindTexture(m_pTexture[0]);
+		// テクスチャ割り当て
+		CTexture *pTexture = GET_TEXTURE_PTR;
+		m_pScene->BindTexture(pTexture->GetTexture(CTexture::TEXTURE_NUM_TUTOTIRAL));
 	}
 	
 	// サウンドのポインタ

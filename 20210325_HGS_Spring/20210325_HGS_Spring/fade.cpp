@@ -151,9 +151,12 @@ void CFade::Draw(void)
 
 void CFade::SetFade(CManager::MODE_TYPE mode)
 {
-	m_FadeMode = FADE_MODE_OUT;
-	m_modeNext = mode;
-	m_colorFade = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f);	//黒い画面（透過）
+	if (m_FadeMode == FADE_MODE_NONE)
+	{
+		m_FadeMode = FADE_MODE_OUT;
+		m_modeNext = mode;
+		m_colorFade = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f);	//黒い画面（透過）
+	}
 }
 
 CFade::FADE_MODE CFade::GetFade(void)
