@@ -23,8 +23,10 @@ CTexture::CTexture()
 	m_aTexFileName =
 	{
 		{ "data/Texture/player.png" },
+		{ "data/Texture/number_1.png" },
+		{ "data/Texture/number_2.png" },
 
-	};
+	}; 
 
 	// 分割テクスチャの名前の設定
 	m_aSparateTexFileName =

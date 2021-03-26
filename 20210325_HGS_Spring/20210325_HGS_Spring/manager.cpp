@@ -181,14 +181,6 @@ void CManager::Uninit(void)
 		m_pFade = nullptr;
 	}
 
-	// !nullcheck
-	if (m_pResourceManager != nullptr)
-	{
-		// リソースのロード
-		delete m_pResourceManager;
-		m_pResourceManager = nullptr;
-	}
-
 	if (m_pInput != nullptr)
 	{
 		//入力処理クラスの終了処理呼び出し
@@ -227,6 +219,14 @@ void CManager::Uninit(void)
 
 	// シーン情報のリリース
 	CScene::ReleaseAll();
+
+	// !nullcheck
+	if (m_pResourceManager != nullptr)
+	{
+		// リソースのロード
+		delete m_pResourceManager;
+		m_pResourceManager = nullptr;
+	}
 }
 
 //=============================================================================

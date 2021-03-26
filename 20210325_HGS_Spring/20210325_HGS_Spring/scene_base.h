@@ -27,13 +27,13 @@ public:
 	virtual void Update(void) = 0;															// 更新処理
 	virtual void Draw(void) = 0;															// 描画処理
 	void BindTexture(LPDIRECT3DTEXTURE9 pTexture) { m_pTexture = pTexture; }				// テクスチャの設定
+	virtual void SetColor(const D3DXCOLOR &col) { m_col = col; }				// 色
 
 protected:
 	// Set関数
 	virtual void SetPos(const D3DXVECTOR3 &pos)							{ m_pos = pos; }				// 座標
 	virtual void SetSize(const D3DXVECTOR3 &size)						{ m_size = size; }				// サイズ
 	virtual void SetRot(const D3DXVECTOR3 &rot)							{ m_rot = rot; }				// 角度		
-	virtual void SetColor(const D3DXCOLOR &col)							{ m_col = col; }				// 色
 	void BindVtxBuff(const LPDIRECT3DVERTEXBUFFER9 pVtxBuff)			{ m_pVtxBuff = pVtxBuff; }		// 頂点バッファ
 	void SetSceneInfo(const D3DXVECTOR3 &pos, const D3DXVECTOR3 &size);
 

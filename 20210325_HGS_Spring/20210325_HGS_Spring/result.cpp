@@ -17,6 +17,8 @@
 #include "keyboard.h"
 #include "joypad.h"
 #include "resource_manager.h"
+#include "ranking.h"
+#include "sound.h"
 
 //=============================================================================
 //リザルトクラスのコンストラクタ
@@ -68,6 +70,12 @@ HRESULT CResult::Init(void)
 		}
 	}
 
+	// ランキングの生成
+	CRanking::Create();
+
+	//サウンドの再生
+	GET_SOUND_PTR->Play(CSound::SOUND_LABEL_BGM_RESULT);
+
 	return E_NOTIMPL;
 }
 
@@ -76,6 +84,9 @@ HRESULT CResult::Init(void)
 //=============================================================================
 void CResult::Uninit(void)
 {
+	//サウンドの停止
+	GET_SOUND_PTR->Stop(CSound::SOUND_LABEL_BGM_RESULT);
+
 	if (m_pScene2D != nullptr)
 	{
 		m_pScene2D->Uninit();
@@ -101,6 +112,9 @@ void CResult::Update(void)
 	{
 		CFade *pFade = CManager::GetFade();
 		pFade->SetFade(CManager::MODE_TYPE_TITLE);
+
+		//サウンドの再生
+		GET_SOUND_PTR->Play(CSound::SOUND_LABEL_SE_DECISION);
 	}
 }
 
