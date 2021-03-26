@@ -174,15 +174,15 @@ INPUT_TYPE CPlayer2d::InputDirection(void)
 	{
 		return INPUT_TYPE_UP;
 	}
-	if (pKeyboard->GetTrigger(DIK_A))
+	else if (pKeyboard->GetTrigger(DIK_A))
 	{
 		return INPUT_TYPE_LEFT;
 	}
-	if (pKeyboard->GetTrigger(DIK_S))
+	else if (pKeyboard->GetTrigger(DIK_S))
 	{
 		return INPUT_TYPE_DOWN;
 	}
-	if (pKeyboard->GetTrigger(DIK_D))
+	else if (pKeyboard->GetTrigger(DIK_D))
 	{
 		return INPUT_TYPE_RIGHT;
 	}

@@ -18,8 +18,8 @@
 //=============================================================================
 // マクロ定義
 //=============================================================================
-#define SCROLL_SPEED_X		((SCREEN_WIDTH)/SCROLL_FRAME)										// 移動量
-#define SCROLL_SPEED_Y		((SCREEN_HEIGHT)/SCROLL_FRAME)										// 移動量
+#define SCROLL_SPEED_X		((SCREEN_WIDTH)/(float)SCROLL_FRAME)										// 移動量
+#define SCROLL_SPEED_Y		((SCREEN_HEIGHT)/(float)SCROLL_FRAME)										// 移動量
 
 #define SCROLL_POS_UP		(D3DXVECTOR3((SCREEN_WIDTH/2), SCREEN_HEIGHT+(SCREEN_HEIGHT/2), 0.0f))	// 座標
 #define SCROLL_POS_DOWN		(D3DXVECTOR3((SCREEN_WIDTH/2), -(SCREEN_HEIGHT/2), 0.0f))				// 座標
@@ -118,14 +118,15 @@ void CMapManager::CreateMap(INPUT_TYPE InputType)
 	// サイズがあれば
 	if (m_pScroll.size() != 0)
 	{
-		// 二度目の移動を設定
-		m_pScroll.at(0)->SetSecondMove(true);
-
 		// 座標設定
 		pos = SetPos(InputType);
 
 		// 移動量の設定
 		move = SetMove(InputType);
+
+		// 二度目の移動を設定
+		m_pScroll.at(0)->SetSecondMove(true, move);
+
 	}
 	else
 	{

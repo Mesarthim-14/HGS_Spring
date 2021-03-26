@@ -27,7 +27,6 @@ CScrollPolygon::CScrollPolygon(PRIORITY Priority) : CScene2D(Priority)
 {
 	m_ScrollInfo = { DIRECTION_TYPE_NONE , false };
 	m_nCounter = 0;
-	m_DefaultMove = ZeroVector3;			// 元の移動量
 	m_move = ZeroVector3;					// 移動量
 	m_bSecondMove = false;					// 二度目の移動
 	m_bEnd = false;
@@ -58,7 +57,6 @@ CScrollPolygon* CScrollPolygon::Create(D3DXVECTOR3 pos, D3DXVECTOR3 move, SCROLL
 
 		// 移動量
 		pScrollPolygon->m_move = move;
-		pScrollPolygon->m_DefaultMove = move;
 
 		// 構造体情報代入
 		pScrollPolygon->m_ScrollInfo = ScrollInfo;
@@ -94,11 +92,15 @@ void CScrollPolygon::Update(void)
 {
 	m_nCounter++;
 
+	// 座標
+	GetPos() += m_move;
+
+	// 頂点の移動
+	UpdateVertex();
 
 	// 二度目の移動
 	if (m_bSecondMove == true)
 	{
-		GetPos() += m_DefaultMove;
 
 		// スクロールするカウンタ
 		if (m_nCounter >= SCROLL_FRAME)
@@ -109,9 +111,6 @@ void CScrollPolygon::Update(void)
 	}
 	else
 	{
-		// 座標
-		GetPos() += m_move;
-
 		// スクロールするカウンタ
 		if (m_nCounter >= SCROLL_FRAME)
 		{
@@ -120,18 +119,14 @@ void CScrollPolygon::Update(void)
 			m_bStop = true;
 		}
 	}
-
-	// 頂点の移動
-	UpdateVertex();
 }
 
 //=======================================================================================
 // 
 //=======================================================================================
-void CScrollPolygon::SetSecondMove(bool bSecondMove)
+void CScrollPolygon::SetSecondMove(bool bSecondMove, D3DXVECTOR3 move)
 {
 	m_bSecondMove = bSecondMove;
 	m_nCounter = 0;
-	m_move = ZeroVector3;
-//	m_move = m_DefaultMove;
+	m_move = move;
 }

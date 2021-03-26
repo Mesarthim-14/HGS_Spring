@@ -50,7 +50,7 @@ public:
 	void Update(void);						// 更新処理
 
 	// Set関数
-	void SetSecondMove(bool bSecondMove);
+	void SetSecondMove(bool bSecondMove, D3DXVECTOR3 move);
 
 	// Get関数
 	bool GetEnd(void)				{ return m_bEnd ; }	// 終了フラグ
@@ -59,7 +59,6 @@ public:
 private:
 	int m_nCounter;						// カウンター
 	SCROLL_INFO m_ScrollInfo;			// スクロール情報
-	D3DXVECTOR3 m_DefaultMove;			// 元の移動量
 	D3DXVECTOR3 m_move;					// 移動量
 	bool m_bSecondMove;					// 二度目の移動
 	bool m_bEnd;						// 終了フラグ
