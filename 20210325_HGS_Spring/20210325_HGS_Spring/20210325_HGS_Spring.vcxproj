@@ -169,6 +169,7 @@
     <ClInclude Include="modelanime.h" />
     <ClInclude Include="motion.h" />
     <ClInclude Include="number_2d.h" />
+    <ClInclude Include="order.h" />
     <ClInclude Include="particle.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="player2d.h" />
@@ -215,6 +216,7 @@
     <ClCompile Include="modelanime.cpp" />
     <ClCompile Include="motion.cpp" />
     <ClCompile Include="number_2d.cpp" />
+    <ClCompile Include="order.cpp" />
     <ClCompile Include="particle.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="player2d.cpp" />

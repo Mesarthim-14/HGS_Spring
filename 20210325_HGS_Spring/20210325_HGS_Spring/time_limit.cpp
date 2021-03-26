@@ -33,6 +33,7 @@ CTimeLimit * CTimeLimit::Create(void)
 	pTimeLimit->m_fTime = DEFAULT_TIME + ((25 - DEFAULT_TIME)*1/MAX_TIME_SCORE)* nTimeRate;
 	pTimeLimit->m_fMaxTime = pTimeLimit->m_fTime;
 	pTimeLimit->Init();
+
 	return pTimeLimit;
 }
 
@@ -51,6 +52,7 @@ CTimeLimit::CTimeLimit()
 //=============================================================================
 CTimeLimit::~CTimeLimit()
 {
+	
 }
 
 //=============================================================================

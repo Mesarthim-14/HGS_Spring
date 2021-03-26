@@ -109,6 +109,14 @@ void CPlayer2d::Uninit(void)
 
 	// 終了処理
 	CCharacter2d::Uninit();
+
+	// 終了処理
+	if (m_pTimeLimit != nullptr)
+	{
+		m_pTimeLimit->Uninit();
+		m_pTimeLimit = nullptr;
+	}
+
 }
 
 //=============================================================================
@@ -202,14 +210,6 @@ void CPlayer2d::PlayerControl()
 					
 					// テクスチャの変更
 					ChangeTexture(InputType);
-
-					// スクロールポリゴン情報の破棄
-					m_pScrollPolygon.pop_back();
-
-					CMapManager *pMapManager = CGame::GetMapManager();
-
-					// 次のマップ生成
-					pMapManager->CreateMap(InputType);
 				}
 				else
 				{// 衝突の判定
