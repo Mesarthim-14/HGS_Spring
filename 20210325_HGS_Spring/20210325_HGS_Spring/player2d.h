@@ -10,8 +10,15 @@
 //=============================================================================
 // インクルード
 //=============================================================================
+#include "game.h"
 #include "character2d.h"
 #include "player.h"
+#include "map_manager.h"
+
+//=============================================================================
+// 前方宣言
+//=============================================================================
+class CScrollPolygon;
 
 //=============================================================================
 // プレイヤー2Dクラス
@@ -29,10 +36,14 @@ public:
 	void Update(void);				// 更新処理
 	void Draw(void);				// 描画処理
 
-	void UpdateState(void);			// プレイヤーの状態
-	void PlayerControl(void);		// プレイヤーの制御
-	void Move(void);				// プレイヤーの歩く処理
-
+	void UpdateState(void);									// プレイヤーの状態
+	void PlayerControl(void);								// プレイヤーの制御
+	INPUT_TYPE InputDirection(void);						// 方向の入力処理
+	void Move(void);										// プレイヤーの歩く処理
+	bool InputJudg(INPUT_TYPE InputType);									// 入力処理の判定
+	void SetScrollPolygon(CScrollPolygon *pScrollPolygon);	// スクロールポリゴンのポインタ
 private:
+	std::vector<CScrollPolygon*> m_pScrollPolygon;	// 現在のスクロール情報のポインタ
+	
 };
 #endif

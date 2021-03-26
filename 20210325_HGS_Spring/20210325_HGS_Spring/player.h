@@ -26,7 +26,7 @@ public:
 		PLAYER_STATE_MAX			// 最大数
 	};
 
-	CPlayer();		// コンストラクタ
+	CPlayer();					// コンストラクタ
 	virtual ~CPlayer() {}		// デストラクタ
 
 	virtual HRESULT Init(void) = 0;			// 初期化処理
