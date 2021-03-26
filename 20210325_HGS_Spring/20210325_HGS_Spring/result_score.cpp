@@ -1,6 +1,6 @@
 //=============================================================================
 //
-// ランキングクラス [ranking.cpp]
+// リザルトスコア処理 [result_score.cpp]
 // Author : Konishi Yuuto
 //
 //=============================================================================
@@ -27,6 +27,8 @@
 
 #define RANKING_FLASH_NUM	(3)						// ランキング点滅フレーム
 
+#define RESULT_SCORE_COUNT_SPEED	(60)			//リザルトスコアのカウントが終わるまでの秒数
+
 //=============================================================================
 // マクロ定義
 //=============================================================================
@@ -52,8 +54,9 @@ CResultScore * CResultScore::Create(void)
 CResultScore::CResultScore()
 {
 	// 0クリア
-	m_nScore = 0;
-	m_nScoreCount = 0;
+	m_fScore = 0;
+	m_fScoreCount = 0;
+	m_fScoreCntSpeed = 0;
 }
 
 //=============================================================================
@@ -71,8 +74,10 @@ HRESULT CResultScore::Init(void)
 	CTexture *pTexture = GET_TEXTURE_PTR;
 
 	// スコアの取得
-	m_nScore = CScore::GetScorePointa()->GetScoreData().nScore;
-	//m_nScore = 99;
+	m_fScore = (float)CScore::GetScorePointa()->GetScoreData().nScore;
+
+	//毎フレーム加算する値を算出
+	m_fScoreCntSpeed = m_fScore / RESULT_SCORE_COUNT_SPEED;
 
 	for (int nCount = 0; nCount < MAX_NUMBER; nCount++)
 	{
@@ -119,20 +124,20 @@ void CResultScore::Uninit(void)
 //=============================================================================
 void CResultScore::Update(void)
 {
-	if (m_nScoreCount <= m_nScore)
+	if (m_fScoreCount <= m_fScore)
 	{
+		m_fScoreCount += m_fScoreCntSpeed;
+
 		for (int nCount = 0; nCount < MAX_NUMBER; nCount++)
 		{
 			if (m_pScore[nCount] != NULL)
 			{
-				int nNum = (m_nScoreCount / (int)(pow(10, nCount))) % 10;
+				int nNum = ((int)m_fScoreCount / (int)(pow(10, nCount))) % 10;
 
 				// 数字の設定
 				m_pScore[nCount]->SetNumber(nNum);
 			}
 		}
-
-		m_nScoreCount++;
 	}
 }
 

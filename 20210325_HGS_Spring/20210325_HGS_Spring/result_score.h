@@ -44,8 +44,9 @@ public:
 
 private:
 	CNumber2d *m_pScore[MAX_NUMBER];		// スコアポインタ
-	int m_nScore;							// スコア
-	int m_nScoreCount;						// スコアのカウント
+	float m_fScore;							// スコア
+	float m_fScoreCount;						// スコアのカウント
+	float m_fScoreCntSpeed;					// スコアのカウントスピード
 };
 
 #endif
