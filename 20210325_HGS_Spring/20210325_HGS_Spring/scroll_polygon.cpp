@@ -127,8 +127,9 @@ void CScrollPolygon::Update(void)
 	// !nullcheck
 	if (m_pOrder != nullptr)
 	{
+		D3DXVECTOR3 pos = GetPos();
 		// À•W‚ÌXV
-		m_pOrder->GetPos() = GetPos();
+		m_pOrder->GetPos() = D3DXVECTOR3(pos.x, pos.y - 85.0f, 0.0f);
 		m_pOrder->UpdateVertex();
 	}
 

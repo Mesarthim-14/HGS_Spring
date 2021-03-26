@@ -21,15 +21,15 @@
 #define SCROLL_SPEED_X		((SCREEN_WIDTH)/(float)SCROLL_FRAME)										// 移動量
 #define SCROLL_SPEED_Y		((SCREEN_HEIGHT)/(float)SCROLL_FRAME)										// 移動量
 
-#define SCROLL_POS_UP		(D3DXVECTOR3((SCREEN_WIDTH/2), SCREEN_HEIGHT+(SCREEN_HEIGHT/2), 0.0f))	// 座標
-#define SCROLL_POS_DOWN		(D3DXVECTOR3((SCREEN_WIDTH/2), -(SCREEN_HEIGHT/2), 0.0f))				// 座標
-#define SCROLL_POS_RIGHT	(D3DXVECTOR3(-(SCREEN_WIDTH/2), (SCREEN_HEIGHT/2), 0.0f))				// 座標
-#define SCROLL_POS_LEFT		(D3DXVECTOR3(SCREEN_WIDTH+(SCREEN_WIDTH/2), (SCREEN_HEIGHT/2), 0.0f))	// 座標
+#define SCROLL_POS_UP		(D3DXVECTOR3((SCREEN_WIDTH/2), -(SCREEN_HEIGHT/2), 0.0f))				// 座標
+#define SCROLL_POS_DOWN		(D3DXVECTOR3((SCREEN_WIDTH/2), SCREEN_HEIGHT+(SCREEN_HEIGHT/2), 0.0f))	// 座標
+#define SCROLL_POS_RIGHT	(D3DXVECTOR3(SCREEN_WIDTH+(SCREEN_WIDTH/2), (SCREEN_HEIGHT/2), 0.0f))	// 座標
+#define SCROLL_POS_LEFT		(D3DXVECTOR3(-(SCREEN_WIDTH/2), (SCREEN_HEIGHT/2), 0.0f))				// 座標
 
-#define SCROLL_MOVE_UP		(D3DXVECTOR3(0.0f, -SCROLL_SPEED_Y, 0.0f))	// 移動量
-#define SCROLL_MOVE_DOWN	(D3DXVECTOR3(0.0f, SCROLL_SPEED_Y, 0.0f))	// 移動量
-#define SCROLL_MOVE_RIGHT	(D3DXVECTOR3(SCROLL_SPEED_X, 0.0f, 0.0f))	// 移動量
-#define SCROLL_MOVE_LEFT	(D3DXVECTOR3(-SCROLL_SPEED_X, 0.0f, 0.0f))	// 移動量
+#define SCROLL_MOVE_UP		(D3DXVECTOR3(0.0f, SCROLL_SPEED_Y, 0.0f))	// 移動量
+#define SCROLL_MOVE_DOWN	(D3DXVECTOR3(0.0f, -SCROLL_SPEED_Y, 0.0f))	// 移動量
+#define SCROLL_MOVE_RIGHT	(D3DXVECTOR3(-SCROLL_SPEED_X, 0.0f, 0.0f))	// 移動量
+#define SCROLL_MOVE_LEFT	(D3DXVECTOR3(SCROLL_SPEED_X, 0.0f, 0.0f))	// 移動量
 
 //=============================================================================
 // static初期化宣言
@@ -67,13 +67,9 @@ void CMapManager::Uninit(void)
 			m_pScroll[nCount] = nullptr;
 		}
 	}
-
-	// 配列があれば
-	if (m_pScroll.size() != 0)
-	{
 		// 配列のクリア
 		m_pScroll.clear();
-	}
+	
 
 	// !nullcheck
 	if (m_pMap != nullptr)
