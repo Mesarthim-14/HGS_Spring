@@ -50,6 +50,7 @@ public:
 	void AddScore(SCORE_TYPE type);
 
 	static CScore *GetScorePointa(void) { return m_pScore; }
+	Score GetScoreData(void) { return m_score; }
 private:
 	static CScore * m_pScore;
 
