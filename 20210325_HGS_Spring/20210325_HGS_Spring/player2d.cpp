@@ -143,7 +143,8 @@ void CPlayer2d::Update(void)
 		// リザルトに遷移処理
 		CFade *pFade = CManager::GetFade();
 		pFade->SetFade(CManager::MODE_TYPE_RESULT);
-
+		//サウンドの再生
+		GET_SOUND_PTR->Play(CSound::SOUND_LABEL_SE_GAME_OVER);
 		//// コントローラー振動
 		//CManager::GetJoypad()->SetVibration(0);
 	}
@@ -207,7 +208,8 @@ void CPlayer2d::PlayerControl()
 				{
 					// スコア加算
 					CScore::GetScorePointa()->AddScore(m_pTimeLimit->CheckEvaluation());
-					
+					//サウンドの再生
+					GET_SOUND_PTR->Play(CSound::SOUND_LABEL_SE_SWIPE);
 					// テクスチャの変更
 					ChangeTexture(InputType);
 				}
