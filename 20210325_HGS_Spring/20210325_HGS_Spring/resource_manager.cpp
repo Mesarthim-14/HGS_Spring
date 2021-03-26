@@ -104,7 +104,7 @@ void CResourceManager::LoadAll(void)
 	{
 		// テクスチャロード
 		m_pTexture->Load();
-	//	m_pTexture->SeparateTexLoad();
+		m_pTexture->SeparateTexLoad();
 	}
 
 	// !nullcheck
@@ -131,7 +131,7 @@ void CResourceManager::UnLoadAll(void)
 	{
 		// テクスチャアンロード
 		m_pTexture->UnLoad();
-	//	m_pTexture->SeparateTexUnLoad();
+		m_pTexture->SeparateTexUnLoad();
 	}
 
 	// !nullcheck

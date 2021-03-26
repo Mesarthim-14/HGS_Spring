@@ -29,7 +29,11 @@ CTexture::CTexture()
 	// 分割テクスチャの名前の設定
 	m_aSparateTexFileName =
 	{
-		{"data/Texture/sharp_effect.png"},				// 鋭いエフェクト
+		{ "data/Texture/U1.png" },				// 上
+		{ "data/Texture/D1.png" },				// 下
+		{ "data/Texture/R1.png" },				// 右
+		{ "data/Texture/L1.png" },				// 左
+		{ "data/Texture/N1.png" },				// ニュートラル
 	};
 }
 
@@ -97,9 +101,9 @@ HRESULT CTexture::SeparateTexLoad(void)
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
 	// 分割テクスチャの読み込み
-	for (size_t nCount = 0; nCount < m_aTexFileName.size(); nCount++)
+	for (size_t nCount = 0; nCount < m_aSparateTexFileName.size(); nCount++)
 	{
-	//	D3DXCreateTextureFromFile(pDevice, m_aSparateTexFileName[nCount].data(), &m_apSeparateTexture[nCount].pSeparateTexture);
+		D3DXCreateTextureFromFile(pDevice, m_aSparateTexFileName.at(nCount).data(), &m_apSeparateTexture[nCount].pSeparateTexture);
 	}
 
 	return S_OK;

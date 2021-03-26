@@ -35,7 +35,11 @@ public:
 	typedef enum
 	{
 		SEPARATE_TEX_NONE = -1,			// 初期値
-		SEPARATE_TEX_SHARP,				// 鋭いエフェクト
+		SEPARATE_TEX_PLAYER_UP,			// 上
+		SEPARATE_TEX_PLAYER_DOWN,		// 下
+		SEPARATE_TEX_PLAYER_RIGHT,		// 右
+		SEPARATE_TEX_PLAYER_LEFT,		// 左
+		SEPARATE_TEX_PLAYER_NEUTRAL,	// ニュートラル
 		SEPARATE_TEX_MAX				// 最大値
 	}SEPARATE_TEX_TYPE;
 
@@ -73,7 +77,11 @@ private:
 	// 分割テクスチャの構造体
 	SEPARATE_TEX_INFO m_apSeparateTexture[SEPARATE_TEX_MAX] =
 	{
-		nullptr, CTexture::SEPARATE_TEX_SHARP, D3DXVECTOR2(5, 5), false,
+		nullptr, SEPARATE_TEX_PLAYER_UP, D3DXVECTOR2(2, 16), true,		 // 上
+		nullptr, SEPARATE_TEX_PLAYER_DOWN, D3DXVECTOR2(2, 16), true,		 // 下
+		nullptr, SEPARATE_TEX_PLAYER_RIGHT, D3DXVECTOR2(2, 16), true,		 // 右
+		nullptr, SEPARATE_TEX_PLAYER_LEFT, D3DXVECTOR2(2, 16), true,		 // 左
+		nullptr, SEPARATE_TEX_PLAYER_NEUTRAL, D3DXVECTOR2(2, 16), true,	 // ニュートラル
 	};
 	// 分割テクスチャのポインタ
 };
