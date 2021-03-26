@@ -96,6 +96,8 @@ HRESULT CGame::Init()
 	D3DXCreateFont(pD3DDevice, 18, 0, 0, 0, FALSE, SHIFTJIS_CHARSET,
 		OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH, "Terminal", &m_pFont);
 
+	//サウンドの再生
+	GET_SOUND_PTR->Play(CSound::SOUND_LABEL_BGM_GAME);
 	// スコアクラスの生成
 	CScore::Create();
 
@@ -107,6 +109,9 @@ HRESULT CGame::Init()
 //=======================================================================================
 void CGame::Uninit(void)
 {
+	//サウンドの停止
+	GET_SOUND_PTR->Stop(CSound::SOUND_LABEL_BGM_GAME);
+
 	// !nullcheck
 	if (m_pPlayer2d != nullptr)
 	{
