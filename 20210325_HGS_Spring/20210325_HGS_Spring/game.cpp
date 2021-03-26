@@ -23,6 +23,7 @@
 #include "mesh_3d.h"
 #include "resource_manager.h"
 #include "fade.h"
+#include "map_manager.h"
 
 //=======================================================================================
 // static初期化
@@ -30,6 +31,8 @@
 CCamera *CGame::m_pCamera = nullptr;
 CLight *CGame::m_pLight = nullptr;
 CPlayer3d *CGame::m_pPlayer3d = nullptr;
+CMapManager *CGame::m_pMapManager = nullptr;
+CPlayer2d *CGame::m_pPlayer2d = nullptr;
 
 //=======================================================================================
 // コンストラクタ
@@ -38,7 +41,6 @@ CGame::CGame(PRIORITY Priority) : CScene(Priority)
 {
 	m_bGameEnd = false;
 	m_nTimeCounter = 0;
-	m_pPlayer2d = nullptr;
 }
 
 //=======================================================================================
@@ -68,10 +70,17 @@ CGame* CGame::Create(void)
 //=======================================================================================
 HRESULT CGame::Init()
 {
-	// !nullcheck
+	// nullcheck
 	if (m_pPlayer2d == nullptr)
 	{
 		m_pPlayer2d = CPlayer2d::Create(ZeroVector3, D3DXVECTOR3(50.0f, 50.0f, 50.0f));
+	}
+
+	// nullcheck
+	if (m_pMapManager == nullptr)
+	{
+		// マップマネージャのインスタンス生成
+		m_pMapManager = CMapManager::GetInstance();
 	}
 
 	//デバイス情報の取得
@@ -98,6 +107,14 @@ void CGame::Uninit(void)
 		m_pPlayer2d = nullptr;
 	}
 
+	// nullcheck
+	if (m_pMapManager != nullptr)
+	{
+		// マップマネージャのインスタンス生成
+		delete m_pMapManager;
+		m_pMapManager = nullptr;
+	}
+
 	//オブジェクトの破棄
 	Release();
 }
@@ -107,6 +124,13 @@ void CGame::Uninit(void)
 //=======================================================================================
 void CGame::Update(void)
 {
+	// nullcheck
+	if (m_pMapManager != nullptr)
+	{
+		// マップマネージャのインスタンス生成
+		m_pMapManager->Update();
+	}
+
 	CInputKeyboard* pKey = CManager::GetKeyboard();
 	CFade::FADE_MODE mode = CManager::GetFade()->GetFade();
 	CSound *pSound = CManager::GetResourceManager()->GetSoundClass();

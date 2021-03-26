@@ -158,6 +158,7 @@
     <ClInclude Include="light.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="manager.h" />
+    <ClInclude Include="map_manager.h" />
     <ClInclude Include="mesh_3d.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="modelanime.h" />
@@ -174,6 +175,7 @@
     <ClInclude Include="scene2d.h" />
     <ClInclude Include="scene3D.h" />
     <ClInclude Include="scene_base.h" />
+    <ClInclude Include="scroll_polygon.h" />
     <ClInclude Include="sound.h" />
     <ClInclude Include="texture.h" />
     <ClInclude Include="title.h" />
@@ -195,6 +197,7 @@
     <ClCompile Include="light.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="manager.cpp" />
+    <ClCompile Include="map_manager.cpp" />
     <ClCompile Include="mesh_3d.cpp" />
     <ClCompile Include="model.cpp" />
     <ClCompile Include="modelanime.cpp" />
@@ -211,6 +214,7 @@
     <ClCompile Include="scene2d.cpp" />
     <ClCompile Include="scene3D.cpp" />
     <ClCompile Include="scene_base.cpp" />
+    <ClCompile Include="scroll_polygon.cpp" />
     <ClCompile Include="sound.cpp" />
     <ClCompile Include="texture.cpp" />
     <ClCompile Include="title.cpp" />
