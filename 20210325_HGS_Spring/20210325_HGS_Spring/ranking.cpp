@@ -20,13 +20,13 @@
 // マクロ定義
 //=============================================================================
 #define SAVE_FILENAME "data/Text/Ranking.txt"		// ファイル名
-#define RANKING_INTERVAL_X	(45.0f)					// 数字の間隔
-#define RANKING_INTERVAL_Y	(83.0f)					// 数字の間隔
+#define RANKING_INTERVAL_X	(70.0f)					// 数字の間隔
+#define RANKING_INTERVAL_Y	(100.0f)					// 数字の間隔
 
 #define MY_RANKING_INTERVAL_X	(80.0f)				// 数字の間隔
 #define MY_RANKING_INTERVAL_Y	(88.0f)				// 数字の間隔
 
-#define RANKING_FLASH_NUM	(3)						// ランキング点滅フレーム
+#define RANKING_FLASH_NUM	(30)					// ランキング点滅フレーム
 
 //=============================================================================
 // マクロ定義
@@ -79,8 +79,6 @@ HRESULT CRanking::Init(void)
 {
 	CTexture *pTexture = GET_TEXTURE_PTR;
 
-	m_nSubNum = RANKING_FLASH_NUM;
-
 	for (int nCntRank = 0; nCntRank < MAX_RANKING; nCntRank++)
 	{
 		for (int nCount = 0; nCount < MAX_NUMBER; nCount++)
@@ -113,21 +111,21 @@ HRESULT CRanking::Init(void)
 		}
 	}
 
-	for (int nCount = 0; nCount < MAX_NUMBER; nCount++)
-	{
-		// 数字のメモリ確保
-		m_apMyRanking[nCount] =
-			CNumber2d::Create(D3DXVECTOR3(470.0f - nCount*MY_RANKING_INTERVAL_X, 370.0f, 0.0f),
-								D3DXVECTOR3(MY_RANKING_SIZE_X, MY_RANKING_SIZE_Y, 0.0f));
+	//for (int nCount = 0; nCount < MAX_NUMBER; nCount++)
+	//{
+	//	// 数字のメモリ確保
+	//	m_apMyRanking[nCount] =
+	//		CNumber2d::Create(D3DXVECTOR3(470.0f - nCount*MY_RANKING_INTERVAL_X, 370.0f, 0.0f),
+	//							D3DXVECTOR3(MY_RANKING_SIZE_X, MY_RANKING_SIZE_Y, 0.0f));
 
-		if (m_apMyRanking[nCount] != NULL)
-		{
-			int nNum = (m_nMyRank / (int)(pow(10, nCount))) % 10;
+	//	if (m_apMyRanking[nCount] != NULL)
+	//	{
+	//		int nNum = (m_nMyRank / (int)(pow(10, nCount))) % 10;
 
-			// 数字の設定
-			m_apMyRanking[nCount]->SetNumber(nNum);
-		}
-	}
+	//		// 数字の設定
+	//		m_apMyRanking[nCount]->SetNumber(nNum);
+	//	}
+	//}
 
 	// ファイル入力
 	Save();
@@ -157,17 +155,17 @@ void CRanking::Uninit(void)
 		}
 	}
 
-	for (int nCount = 0; nCount < MAX_NUMBER; nCount++)
-	{
-		if (m_apMyRanking[nCount] != NULL)
-		{
-			// 数字のメモリ確保
-			m_apMyRanking[nCount]->Uninit();
-			//delete m_apMyRanking[nCount];
-			m_apMyRanking[nCount] = NULL;
+	//for (int nCount = 0; nCount < MAX_NUMBER; nCount++)
+	//{
+	//	if (m_apMyRanking[nCount] != NULL)
+	//	{
+	//		// 数字のメモリ確保
+	//		m_apMyRanking[nCount]->Uninit();
+	//		//delete m_apMyRanking[nCount];
+	//		m_apMyRanking[nCount] = NULL;
+	//	}
+	//}
 
-		}
-	}
 	// メモリの開放処理
 	Release();
 }
@@ -197,15 +195,15 @@ void CRanking::Draw(void)
 			}
 		}
 	}
-	for (int nCount = 0; nCount < MAX_NUMBER; nCount++)
-	{
-		if (m_apMyRanking[nCount] != NULL)
-		{
-			// 数字のメモリ確保
-			m_apMyRanking[nCount]->Draw();
+	//for (int nCount = 0; nCount < MAX_NUMBER; nCount++)
+	//{
+	//	if (m_apMyRanking[nCount] != NULL)
+	//	{
+	//		// 数字のメモリ確保
+	//		m_apMyRanking[nCount]->Draw();
 
-		}
-	}
+	//	}
+	//}
 }
 
 //=============================================================================
@@ -305,45 +303,39 @@ void CRanking::SetRanking(int nNumber)
 //=============================================================================
 void CRanking::FlashPolygon(void)
 {
-	//if (m_nCurrentNum != -1)
-	//{
-	//	// フレームを加算
-	//	m_nFlashFlame++;
+	for (int nCntRank = 0; nCntRank < MAX_RANKING; nCntRank++)
+	{
+		for (int nCount = 0; nCount < MAX_NUMBER; nCount++)
+		{
+			if (nCntRank == m_nCurrentNum)
+			{
+				if (m_nCurrentNum != -1)
+				{
+					// フレームを加算
+					m_nFlashFlame++;
 
-	//	for (int nCount = 0; nCount < MAX_NUMBER; nCount++)
-	//	{
-	//		LPDIRECT3DVERTEXBUFFER9 pVtxBuff = m_apRanking[m_nCurrentNum][nCount]->GetVtxBuff();
+					if (m_nFlashFlame >= RANKING_FLASH_NUM)
+					{
+						m_nFlashFlame = 0;
 
-	//		// 頂点情報を設定
-	//		VERTEX_2D *pVtx;
+						if (m_nSubNumber == 0)
+						{
+							// 0になったら切り替え
+							m_nSubNumber = 255;
+						}
+						else if (m_nSubNumber == 255)
+						{
+							// 255になったら切り替え
+							m_nSubNumber = 0;
+						}
 
-	//		// 頂点バッファをロックし、頂点情報へのポインタを取得
-	//		pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
-
-	//		// カラーを減算
-	//		m_nSubNumber -= m_nSubNum;
-
-	//		if (m_nSubNumber <= 0)
-	//		{
-	//			// 0になったら切り替え
-	//			m_nSubNumber = 0;
-	//			m_nSubNum *= -1;
-	//		}
-	//		else if (m_nSubNumber >= 255)
-	//		{
-	//			// 255になったら切り替え
-	//			m_nSubNumber = 255;
-	//			m_nSubNum *= -1;
-	//		}
-
-	//		// 頂点カラーの設定
-	//		pVtx[0].col = D3DCOLOR_RGBA(255 - m_nSubNumber, 255 - m_nSubNumber, 0, 100);	// 左上頂点の色	透明度255
-	//		pVtx[1].col = D3DCOLOR_RGBA(255 - m_nSubNumber, 255 - m_nSubNumber, 0, 100);	// 右上頂点の色	透明度255
-	//		pVtx[2].col = D3DCOLOR_RGBA(255 - m_nSubNumber, 255 - m_nSubNumber, 0, 100);	// 左下頂点の色	透明度255
-	//		pVtx[3].col = D3DCOLOR_RGBA(255 - m_nSubNumber, 255 - m_nSubNumber, 0, 100);	// 右下頂点の色	透明度255
-
-	//																						// 頂点バッファをアンロックする
-	//		pVtxBuff->Unlock();
-	//	}
-	//}
+						for (int nCount = 0; nCount < MAX_NUMBER; nCount++)
+						{
+							m_apRanking[nCntRank][nCount]->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, (float)m_nSubNumber));
+						}
+					}
+				}
+			}
+		}
+	}
 }

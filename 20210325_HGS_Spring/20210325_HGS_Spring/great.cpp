@@ -1,7 +1,7 @@
 //=============================================================================
 //
-// ランキングクラス [ranking.cpp]
-// Author : Konishi Yuuto
+// グレートクラス [great.cpp]
+// Author : Suzuki Mahiro
 //
 //=============================================================================
 
@@ -20,7 +20,7 @@
 //=============================================================================
 // マクロ定義
 //=============================================================================
-#define RANKING_INTERVAL_X	(45.0f)					// 数字の間隔
+#define RANKING_INTERVAL_X	(50.0f)					// 数字の間隔
 #define RANKING_INTERVAL_Y	(83.0f)					// 数字の間隔
 
 #define MY_RANKING_INTERVAL_X	(80.0f)				// 数字の間隔
@@ -75,27 +75,24 @@ HRESULT CGreat::Init(void)
 	// スコアの取得
 	m_nGreat = CScore::GetScorePointa()->GetScoreData().nNumGreat;
 
-	for (int nCntRank = 0; nCntRank < MAX_RANKING; nCntRank++)
+	for (int nCount = 0; nCount < MAX_NUMBER; nCount++)
 	{
-		for (int nCount = 0; nCount < MAX_NUMBER; nCount++)
+		// 数字のメモリ確保
+		m_pGreat[nCount] =
+			CNumber2d::Create(D3DXVECTOR3(GREAT_POS_X - nCount*RANKING_INTERVAL_X,
+				GREAT_POS_Y + RANKING_INTERVAL_Y, 0.0f),
+				D3DXVECTOR3(GREAT_SIZE_X, GREAT_SIZE_Y, 0.0f));
+
+		if (m_pGreat[nCount] != NULL)
 		{
-			// 数字のメモリ確保
-			m_pGreat[nCount] =
-				CNumber2d::Create(D3DXVECTOR3(GREAT_POS_X - nCount*RANKING_INTERVAL_X,
-					GREAT_POS_Y + RANKING_INTERVAL_Y, 0.0f),
-					D3DXVECTOR3(RANKING_SIZE_X, RANKING_SIZE_Y, 0.0f));
+			int nNum = (m_nGreat / (int)(pow(10, nCount))) % 10;
 
-			if (m_pGreat[nCount] != NULL)
-			{
-				int nNum = (m_nGreat / (int)(pow(10, nCount))) % 10;
-
-				// 数字の設定
-				m_pGreat[nCount]->SetNumber(nNum);
-			}
-
-			// テクスチャの設定
-			m_pGreat[nCount]->BindTexture(pTexture->GetTexture(CTexture::TEXTURE_NUM_NUMBER_1_2D));
+			// 数字の設定
+			m_pGreat[nCount]->SetNumber(nNum);
 		}
+
+		// テクスチャの設定
+		m_pGreat[nCount]->BindTexture(pTexture->GetTexture(CTexture::TEXTURE_NUM_NUMBER_1_2D));
 	}
 
 	return S_OK;

@@ -16,14 +16,10 @@
 // マクロ定義
 //=============================================================================
 #define MAX_NUMBER		(2)				// ナンバーの桁数
-#define MAX_RANKING		(5)				// ランキングの数
-#define PERFECT_POS_X	(200.0f)		// ランキングの横の座標
-#define PERFECT_POS_Y	(650.0f)		// ランキングの縦の座標
-#define RANKING_SIZE_X	(15.0f)			// ランキングの横のサイズ
-#define RANKING_SIZE_Y	(20.0f)			// ランキングの縦のサイズ
-
-#define MY_RANKING_SIZE_X	(55.0f)		// ランキングの横のサイズ
-#define MY_RANKING_SIZE_Y	(60.0f)		// ランキングの縦のサイズ
+#define PERFECT_POS_X	(510.0f)		// パーフェクトの横の座標
+#define PERFECT_POS_Y	(525.0f)		// パーフェクトの縦の座標
+#define PERFECT_SIZE_X	(35.0f)			// パーフェクトの横のサイズ
+#define PERFECT_SIZE_Y	(40.0f)			// パーフェクトの縦のサイズ
 
 //=============================================================================
 // 前置宣言

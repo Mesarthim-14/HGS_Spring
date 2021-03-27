@@ -26,6 +26,7 @@
 #include "map_manager.h"
 #include "score.h"
 #include "evaluation_ui.h"
+#include "ranking.h"
 
 //=======================================================================================
 // static初期化
@@ -112,6 +113,9 @@ void CGame::Uninit(void)
 {
 	//サウンドの停止
 	GET_SOUND_PTR->Stop(CSound::SOUND_LABEL_BGM_GAME);
+
+	// ランキングの設定
+	CRanking::SetRanking(CScore::GetScorePointa()->GetScoreData().nScore);
 
 	// !nullcheck
 	if (m_pPlayer2d != nullptr)

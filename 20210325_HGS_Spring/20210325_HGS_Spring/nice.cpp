@@ -1,7 +1,7 @@
 //=============================================================================
 //
-// ランキングクラス [ranking.cpp]
-// Author : Konishi Yuuto
+// ナイスクラス [nice.cpp]
+// Author : Suzuki Mahiro
 //
 //=============================================================================
 
@@ -20,7 +20,7 @@
 //=============================================================================
 // マクロ定義
 //=============================================================================
-#define RANKING_INTERVAL_X	(45.0f)					// 数字の間隔
+#define RANKING_INTERVAL_X	(50.0f)					// 数字の間隔
 #define RANKING_INTERVAL_Y	(83.0f)					// 数字の間隔
 
 #define MY_RANKING_INTERVAL_X	(80.0f)				// 数字の間隔
@@ -74,27 +74,24 @@ HRESULT CNice::Init(void)
 	// スコアの取得
 	m_nNice = CScore::GetScorePointa()->GetScoreData().nNumNice;
 
-	for (int nCntRank = 0; nCntRank < MAX_RANKING; nCntRank++)
+	for (int nCount = 0; nCount < MAX_NUMBER; nCount++)
 	{
-		for (int nCount = 0; nCount < MAX_NUMBER; nCount++)
+		// 数字のメモリ確保
+		m_pNice[nCount] =
+			CNumber2d::Create(D3DXVECTOR3(NICE_POS_X - nCount*RANKING_INTERVAL_X,
+				NICE_POS_Y + RANKING_INTERVAL_Y, 0.0f),
+				D3DXVECTOR3(NICE_SIZE_X, NICE_SIZE_Y, 0.0f));
+
+		if (m_pNice[nCount] != NULL)
 		{
-			// 数字のメモリ確保
-			m_pNice[nCount] =
-				CNumber2d::Create(D3DXVECTOR3(NICE_POS_X - nCount*RANKING_INTERVAL_X,
-					NICE_POS_Y + RANKING_INTERVAL_Y, 0.0f),
-					D3DXVECTOR3(RANKING_SIZE_X, RANKING_SIZE_Y, 0.0f));
+			int nNum = (m_nNice / (int)(pow(10, nCount))) % 10;
 
-			if (m_pNice[nCount] != NULL)
-			{
-				int nNum = (m_nNice / (int)(pow(10, nCount))) % 10;
-
-				// 数字の設定
-				m_pNice[nCount]->SetNumber(nNum);
-			}
-
-			// テクスチャの設定
-			m_pNice[nCount]->BindTexture(pTexture->GetTexture(CTexture::TEXTURE_NUM_NUMBER_1_2D));
+			// 数字の設定
+			m_pNice[nCount]->SetNumber(nNum);
 		}
+
+		// テクスチャの設定
+		m_pNice[nCount]->BindTexture(pTexture->GetTexture(CTexture::TEXTURE_NUM_NUMBER_1_2D));
 	}
 
 	return S_OK;
